@@ -1,6 +1,6 @@
 {
   "name": "npbtrac/test-inpsyde-plugin",
-  "type": "project",
+  "type": "wordpress-plugin",
   "license": "MIT",
   "description": "Test Plugin for Inpsyde Test",
   "authors": [
