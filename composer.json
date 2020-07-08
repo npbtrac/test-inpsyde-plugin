@@ -14,7 +14,7 @@
   "prefer-stable": true,
   "require": {
     "php": ">=7.2",
-    "pimple/pimple": "~3.0"
+    "illuminate/container": "^7.19"
   },
   "require-dev": {
     "symfony/var-dumper": "^5.1"
