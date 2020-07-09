@@ -6,7 +6,9 @@
  * Text Domain: inpsyde
  */
 
+use TestInpsyde\Wp\Plugin\Services\ViewService;
 use TestInpsyde\Wp\Plugin\Test_Inpsyde;
+
 
 // Use autoload if it isn't loaded before
 if ( ! class_exists( Test_Inpsyde::class ) ) {
@@ -16,11 +18,13 @@ if ( ! class_exists( Test_Inpsyde::class ) ) {
 $text_domain = 'tamara';
 
 $config = [
-	'base_path'         => __DIR__,
-	'base_url'          => plugins_url( null, __FILE__ ),
-	'text_domain'       => $text_domain,
-	'service_providers' => [
-
+	'base_path'   => __DIR__,
+	'base_url'    => plugins_url( null, __FILE__ ),
+	'text_domain' => $text_domain,
+	'services'    => [
+		ViewService::class => [
+			'text_domain' => $text_domain,
+		]
 	],
 ];
 

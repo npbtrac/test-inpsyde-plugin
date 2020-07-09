@@ -4,6 +4,7 @@
 namespace TestInpsyde\Wp\Plugin;
 
 use Exception;
+use TestInpsyde\Wp\Plugin\Services\ViewService;
 use WP;
 use Illuminate\Container\Container;
 use TestInpsyde\Wp\Plugin\Traits\Config_Trait;
@@ -45,9 +46,9 @@ class Test_Inpsyde {
 	public function __construct( $config ) {
 		$this->bind_config( $config );
 
-		if ( isset( $config['service_providers'] ) && $service_providers = $config['service_providers'] ) {
+		if ( ! empty( $services = $config['services'] ?? null ) ) {
 			$this->_container = new Container();
-			$this->register_services_providers( $service_providers );
+			$this->register_services( $services );
 		}
 	}
 
@@ -56,7 +57,7 @@ class Test_Inpsyde {
 	 *
 	 * @param $service_providers
 	 */
-	protected function register_services_providers( $service_providers ) {
+	protected function register_services( $service_providers ) {
 		foreach ( $service_providers as $service_classname => $service_config ) {
 			if ( class_exists( $service_classname ) ) {
 				/** @noinspection PhpUnusedDeclarationInspection */
@@ -77,8 +78,8 @@ class Test_Inpsyde {
 	 *
 	 * @return mixed|null
 	 */
-	public function get_service_provider( $alias ) {
-		return ! empty( $this->_container[ $alias ] ) ? $this->_container[ $alias ] : null;
+	public function get_service( $alias ) {
+		return $this->_container[ $alias ] ?? null;
 	}
 
 	/**
@@ -152,8 +153,10 @@ class Test_Inpsyde {
 		$pagename = $the_wp->query_vars['pagename'] ?? null;
 
 		if ( static::CUSTOM_ENDPOINT_NAME === $pagename ) {
-			echo 'custom-inpsyde';
+			/** @var ViewService $view_service */
+			$view_service = $this->get_service( ViewService::class );
 
+			echo $view_service->render( 'views/custom-insyde' );
 			exit;
 		}
 	}
