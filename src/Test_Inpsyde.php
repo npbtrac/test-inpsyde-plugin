@@ -3,8 +3,9 @@
 
 namespace TestInpsyde\Wp\Plugin;
 
-use Illuminate\Container\Container;
 use Exception;
+use WP;
+use Illuminate\Container\Container;
 use TestInpsyde\Wp\Plugin\Traits\Config_Trait;
 use TestInpsyde\Wp\Plugin\Traits\WP_Attribute_Trait;
 
@@ -20,8 +21,8 @@ class Test_Inpsyde {
 	 */
 	protected static $_instance = null;
 
+	/** @noinspection PhpUnusedElementInspection */
 	/**
-	 * @noinspection PhpUnusedDeclarationInspection
 	 * @var string Base path to this plugin
 	 */
 	public $base_path;
@@ -108,14 +109,6 @@ class Test_Inpsyde {
 	 * Do some needed things when activate plugin
 	 */
 	public static function activate_plugin() {
-		global $wp_rewrite;
-
-		/** @var \WP_Rewrite $wp_rewrite */
-		if ( empty( $wp_rewrite->permalink_structure ) ) {
-			// We need to enable pretty url mode to have custom endpoint working
-			die( __( 'Test Inpsyde Plugin: You need to go to Settings -> Permalinks -> Set a pretty permalink to make this plugin works.' ) );
-		}
-
 		// Add rewrite rules
 		static::add_custom_rewrite_rules();
 
@@ -136,7 +129,9 @@ class Test_Inpsyde {
 	 */
 	public function init_plugin() {
 		add_action( 'init', array( get_called_class(), 'add_custom_rewrite_rules' ) );
-		add_action( 'wp', array( $this, 'render_custom_inpsyde_response' ) );
+
+		// We use `init` hook to avoid parse_request process because we want to use custom request
+		add_action( 'init', array( $this, 'render_custom_inpsyde_response' ), 1000 );
 	}
 
 	/**
@@ -150,14 +145,14 @@ class Test_Inpsyde {
 	 * Handle response for custom endpoint
 	 */
 	public function render_custom_inpsyde_response() {
-		global $wp_rewrite;
+		// We need to parse request here to fetch our needed query_var because this method would be call before main query executed
+		$the_wp = new WP();
+		$the_wp->parse_request();
 
-		$pagename = get_query_var( 'pagename' );
+		$pagename = $the_wp->query_vars['pagename'] ?? null;
 
 		if ( static::CUSTOM_ENDPOINT_NAME === $pagename ) {
-			http_response_code( 200 );
 			echo 'custom-inpsyde';
-
 
 			exit;
 		}
