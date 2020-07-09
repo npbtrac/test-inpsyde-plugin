@@ -18,6 +18,7 @@
 	},
 	"require-dev": {
 		"bjornjohansen/wp-pre-commit-hook": "*",
+		"inpsyde/php-coding-standards": "^0.13",
 		"symfony/var-dumper": "^5.1"
 	},
 	"autoload": {
