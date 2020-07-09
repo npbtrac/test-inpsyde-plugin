@@ -1,27 +1,28 @@
 {
-  "name": "npbtrac/test-inpsyde-plugin",
-  "type": "wordpress-plugin",
-  "license": "MIT",
-  "description": "Test Plugin for Inpsyde Test",
-  "authors": [
-    {
-      "name": "Trac Nguyen",
-      "email": "npbtrac@yahoo.com",
-      "homepage": "https://github.com/npbtrac"
-    }
-  ],
-  "minimum-stability": "dev",
-  "prefer-stable": true,
-  "require": {
-    "php": ">=7.2",
-    "illuminate/container": "^7.19"
-  },
-  "require-dev": {
-    "symfony/var-dumper": "^5.1"
-  },
-  "autoload": {
-    "psr-4": {
-      "TestInpsyde\\Wp\\Plugin\\": "src"
-    }
-  }
+	"name": "npbtrac/test-inpsyde-plugin",
+	"type": "wordpress-plugin",
+	"license": "MIT",
+	"description": "Test Plugin for Inpsyde Test",
+	"authors": [
+		{
+			"name": "Trac Nguyen",
+			"email": "npbtrac@yahoo.com",
+			"homepage": "https://github.com/npbtrac"
+		}
+	],
+	"minimum-stability": "dev",
+	"prefer-stable": true,
+	"require": {
+		"php": ">=7.2",
+		"illuminate/container": "^7.19"
+	},
+	"require-dev": {
+		"bjornjohansen/wp-pre-commit-hook": "*",
+		"symfony/var-dumper": "^5.1"
+	},
+	"autoload": {
+		"psr-4": {
+			"TestInpsyde\\Wp\\Plugin\\": "src"
+		}
+	}
 }
