@@ -6,7 +6,7 @@
  * Text Domain: inpsyde
  */
 
-use TestInpsyde\Wp\Plugin\Services\ViewService;
+use TestInpsyde\Wp\Plugin\Services\View_Service;
 use TestInpsyde\Wp\Plugin\Test_Inpsyde;
 
 
@@ -22,7 +22,7 @@ $config = [
 	'base_url'    => plugins_url( null, __FILE__ ),
 	'text_domain' => $text_domain,
 	'services'    => [
-		ViewService::class => [
+		View_Service::class => [
 			'text_domain' => $text_domain,
 		]
 	],
