@@ -4,7 +4,6 @@
 namespace TestInpsyde\Wp\Plugin;
 
 use Exception;
-use WP;
 use Illuminate\Container\Container;
 use TestInpsyde\Wp\Plugin\Services\View_Service;
 use TestInpsyde\Wp\Plugin\Traits\Service_Trait;
@@ -121,8 +120,8 @@ class Test_Inpsyde extends Container {
 	protected function init_plugin() {
 		add_action( 'init', array( get_called_class(), 'add_custom_rewrite_rules' ) );
 
-		// We use `init` hook to avoid parse_request process because we want to use custom request
-		add_action( 'init', array( $this, 'render_custom_inpsyde_response' ), 1000 );
+		// We use `parse_query` hook for allowing widgets to be initialized
+		add_action( 'parse_query', array( $this, 'render_custom_inpsyde_response' ), 1000 );
 	}
 
 	/**
@@ -139,11 +138,7 @@ class Test_Inpsyde extends Container {
 	 * @throws \Illuminate\Contracts\Container\BindingResolutionException
 	 */
 	public function render_custom_inpsyde_response() {
-		// We need to parse request here to fetch our needed query_var because this method would be call before main query executed
-		$the_wp = new WP();
-		$the_wp->parse_request();
-
-		$pagename = $the_wp->query_vars['pagename'] ?? null;
+		$pagename = get_query_var( 'pagename' );
 
 		if ( static::CUSTOM_ENDPOINT_NAME === $pagename ) {
 			/** @var View_Service $view_service */
@@ -152,5 +147,16 @@ class Test_Inpsyde extends Container {
 			echo $view_service->render( 'views/custom-insyde' );
 			exit;
 		}
+	}
+
+	/** @noinspection PhpFullyQualifiedNameUsageInspection */
+	/**
+	 * Get the `view` service
+	 *
+	 * @throws \Illuminate\Contracts\Container\BindingResolutionException
+	 * @return View_Service
+	 */
+	public static function get_view_service() {
+		return static::getInstance()->make( View_Service::class );
 	}
 }

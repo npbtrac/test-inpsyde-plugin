@@ -3,7 +3,6 @@
 namespace TestInpsyde\Wp\Plugin\Services;
 
 
-use TestInpsyde\Wp\Plugin\Interfaces\Service_Interface;
 use TestInpsyde\Wp\Plugin\Traits\Config_Trait;
 use TestInpsyde\Wp\Plugin\Traits\Service_Trait;
 use TestInpsyde\Wp\Plugin\Traits\WP_Attribute_Trait;
