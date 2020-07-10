@@ -46,15 +46,15 @@ define( 'DB_COLLATE', '' );
  *
  * @since 2.6.0
  */
-define( 'AUTH_KEY',          'hj1n=mC.FLnd+CQ%]/2[;}SKq4?F9>iuJ`t~_Y:l:I/I#:K3XIZ!XS,@$f/XK@,V' );
-define( 'SECURE_AUTH_KEY',   'A50XJ Y$clK:J{sVwF;mP/i=%J||]MsL?27VIRcef Hip:t>&Lzh]#f25 -^pf#=' );
-define( 'LOGGED_IN_KEY',     'K~eg;}V!N!*`H8YBoX0AmAzuU+]R(p`aymVs.`LQ6j/Lji@`Q|)i2J*-hcw,>G/-' );
-define( 'NONCE_KEY',         'TD-pD25zh<JBIfYZk;LYazV`O~2>Q1>e2gY3ZzH+Qk+EyfRPj(BwY&_9[-r;]iYF' );
-define( 'AUTH_SALT',         'k`u6/ObUDq@Qf^6R!y<eC#8S`U4A`Lne(~MG34s0K&@/AjV.-}S@0NxLph1}xeY-' );
-define( 'SECURE_AUTH_SALT',  '_zccG$Z=y%U7&<S.t?u<u{+W%seh?IPyS,PC?m4-rWp>*U+0NVCMBn|.iv{BU)2`' );
-define( 'LOGGED_IN_SALT',    'wS<-}Y5n(~_.}hLiiR$u43&xh7;RLT}H#7tO3%<PdhrA-jrnIA_WV>B26#1GaD]o' );
-define( 'NONCE_SALT',        ':~%5:{7-&O}4OOUN`#j.$uD29tsthvN6;-e`=TeF 5k&JP35C+fLRZT?q-k%/U(G' );
-define( 'WP_CACHE_KEY_SALT', 'GmSubuG}Erm@?o8fs;gPG_+l5pW%tjw:(>:)IRu6jpp/NUj}:G4x00MC+Ph.s,JI' );
+define( 'AUTH_KEY',          'tF^PTXM]QtG,uBw!Xv=TP#MwEP9W0H)D?JnOeQ~qefefSgmUsE$HRGKr8iPGsS5M' );
+define( 'SECURE_AUTH_KEY',   'zAt:[K*Ssi~,;lp5WQ3r4!I):=,@&C[v^/l1P=f4Koe!:)EErv@QQ|%j!ihI@{Qa' );
+define( 'LOGGED_IN_KEY',     ')B9AL<8/&E`R9)Y).,%&_;^}@Iv~WE{>ZT[XDTM&bIb/Cs88+~22U)}b`pXh~7^g' );
+define( 'NONCE_KEY',         'N&9K*5f:OyX~a!}9<>ZEdGN/;aX*J*Lr}_ui(2ka|; y>NJZT>Q_5Fu?5T_kiiG;' );
+define( 'AUTH_SALT',         '|Il=_inLBa`|0nxpe`HIs;wf+Mm_W<)}>{VAQ;(3;/D N7jK&Nogg9K]qnk})uF)' );
+define( 'SECURE_AUTH_SALT',  '>U49Kee~,qs.Fz%w<FUEgfg{`Y#>4OBB.Z@Ac>K>)Yk44JDzg(c0-3F382J7S`9!' );
+define( 'LOGGED_IN_SALT',    '4z7?_xXPlfPea?}b(KPLxa:G,roa20T,1q5vrb_d|>|Sl)(&#8_t==jO>..4`[9!' );
+define( 'NONCE_SALT',        '>ruz5[L?uA8Z^y/#7>khy<Zf%#[6<6zHLmS/JqafN  o^T2~JoS&vUH;uB2?_%hn' );
+define( 'WP_CACHE_KEY_SALT', 'B<~Pkd7sHPOz[p#,4oaD|lgtcJn[~K:.N{qm A>UgO6;Zw[[*<-| $wQg&s*Ppo;' );
 
 /**
  * WordPress Database Table prefix.
@@ -68,15 +68,6 @@ $table_prefix = 'wp_';
 
 
 /* That's all, stop editing! Happy blogging. */
-/**
- * URLs
- */
-// For using multiple domain
-if ( isset( $_SERVER['HTTP_HOST'] ) ) {
-	$http_protocol = isset( $_SERVER['HTTPS'] ) && 'on' === $_SERVER['HTTPS'] ? 'https' : 'http';
-	define( 'WP_HOME', $http_protocol . '://' . $_SERVER['HTTP_HOST'] );
-	define( 'WP_SITEURL', WP_HOME );
-}
 
 /** Absolute path to the WordPress directory. */
 if ( ! defined( 'ABSPATH' ) )

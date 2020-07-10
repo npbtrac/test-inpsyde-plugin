@@ -1,7 +1,7 @@
 #!/bin/sh
 
+source "$PWD/wp-content/plugins/test-inpsyde-plugin/.env"
 rm -f "$PWD/wp-config.php"
-source "$PWD/wp-content/plugins/woo-paypalplus/.env"
 
 wp config create \
   --dbname="$DB_NAME" \
@@ -9,6 +9,7 @@ wp config create \
   --dbpass="$DB_PASSWORD" \
   --dbhost=mariadb \
   --force
+
 wp core install \
   --url=$PROJECT_BASE_URL \
   --title="$PROJECT_NAME" \
@@ -16,7 +17,4 @@ wp core install \
   --admin_password="$WP_ADMIN_PASSWORD" \
   --admin_email="$WP_ADMIN_EMAIL"\
   --skip-email
-wp plugin activate woocommerce-blocks
-wp plugin activate woocommerce-rest-api
-wp plugin activate woocommerce
-wp plugin activate woo-paypalplus
+wp plugin activate test-inpsyde-plugin
