@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4e0cceb9565955128240d60d2243b7ff",
+    "content-hash": "12cfcde47e645b333a16daee245f487b",
     "packages": [
         {
             "name": "illuminate/container",
@@ -408,6 +408,47 @@
                 "wordpress"
             ],
             "time": "2019-02-19T10:23:48+00:00"
+        },
+        {
+            "name": "johnpbloch/wordpress-core",
+            "version": "5.4.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/johnpbloch/wordpress-core.git",
+                "reference": "3e67d8b6ee6c11e8ce404da4627117fb7fbf9266"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/johnpbloch/wordpress-core/zipball/3e67d8b6ee6c11e8ce404da4627117fb7fbf9266",
+                "reference": "3e67d8b6ee6c11e8ce404da4627117fb7fbf9266",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": ">=5.6.20"
+            },
+            "provide": {
+                "wordpress/core-implementation": "5.4.2"
+            },
+            "type": "wordpress-core",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "WordPress Community",
+                    "homepage": "https://wordpress.org/about/"
+                }
+            ],
+            "description": "WordPress is open source software you can use to create a beautiful website, blog, or app.",
+            "homepage": "https://wordpress.org/",
+            "keywords": [
+                "blog",
+                "cms",
+                "wordpress"
+            ],
+            "time": "2020-06-10T22:05:38+00:00"
         },
         {
             "name": "phpcompatibility/php-compatibility",

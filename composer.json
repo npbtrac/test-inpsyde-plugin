@@ -6,6 +6,7 @@
 	"authors": [
 		{
 			"name": "Trac Nguyen",
+			"role": "Developer",
 			"email": "npbtrac@yahoo.com",
 			"homepage": "https://github.com/npbtrac"
 		}
@@ -19,6 +20,7 @@
 	"require-dev": {
 		"bjornjohansen/wp-pre-commit-hook": "*",
 		"inpsyde/php-coding-standards": "^0.13",
+    "johnpbloch/wordpress-core": "^5.3",
 		"symfony/var-dumper": "^5.1"
 	},
 	"autoload": {
