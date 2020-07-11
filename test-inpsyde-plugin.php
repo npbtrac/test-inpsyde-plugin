@@ -2,7 +2,7 @@
 /**
  * Bootstrap file
  *
- * Bootstrap file to the plugin
+ * Bootstrap file of the plugin
  *
  * @package test-ipsyde-plugin
  *
@@ -12,37 +12,20 @@
  * Text Domain: inpsyde
  */
 
-use TestInpsyde\Wp\Plugin\Services\View_Service;
-use TestInpsyde\Wp\Plugin\Test_Inpsyde;
+use TestInpsyde\Wp\Plugin\TestInpsyde;
 
 // Use autoload if it isn't loaded before.
-if (! class_exists(Test_Inpsyde::class)) {
-    require_once __DIR__ . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+if (! class_exists(TestInpsyde::class)) {
+    require_once __DIR__.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php';
 }
 
-$text_domain = 'inpsyde';
+$config = require_once(__DIR__.DIRECTORY_SEPARATOR.'config.php');
+/** @noinspection PhpUnhandledExceptionInspection */
+TestInpsyde::initInstanceWithConfig($config);
 
-$config = [
-    'base_path' => __DIR__,
-    'base_url' => plugins_url(null, __FILE__),
-    'text_domain' => $text_domain,
-    'services' => [
-        View_Service::class => [
-            'text_domain' => $text_domain,
-        ],
-    ],
-];
-
-register_activation_hook(__FILE__, [ Test_Inpsyde::class, 'activate_plugin' ]);
-register_deactivation_hook(__FILE__, [ Test_Inpsyde::class, 'deactivate_plugin' ]);
+register_activation_hook(__FILE__, [TestInpsyde::getInstance(), 'activatePlugin']);
+register_deactivation_hook(__FILE__, [TestInpsyde::getInstance(), 'deactivatePlugin']);
 
 // We need to set up the main instance for the plugin.
 // Use 'init' event but with low (<10) processing order to be able to execute before -> able to add other init.
-add_action(
-    'init',
-    function () use ($config) {
-        // @noinspection PhpUnusedDeclarationInspection
-        Test_Inpsyde::init_instance_with_config($config);
-    },
-    7
-);
+add_action('init', [TestInpsyde::getInstance(), 'initPlugin'], 7);

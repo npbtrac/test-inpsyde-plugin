@@ -24,6 +24,7 @@
     <exclude name="Inpsyde.CodeQuality.LineLength.TooLong"/>
     <exclude name="Inpsyde.CodeQuality.NoElse.ElseFound"/>
     <exclude name="Inpsyde.CodeQuality.FunctionLength.TooLong"/>
+    <exclude name="Inpsyde.CodeQuality.ForbiddenPublicProperty.Found"/>
     <exclude name="Generic.Metrics.NestingLevel.TooHigh"/>
   </rule>
 
