@@ -14,6 +14,7 @@ indent_size = 2
 
 [*.php]
 indent_size = 4
+insert_final_newline = false
 
 [*.md]
 trim_trailing_whitespace = false

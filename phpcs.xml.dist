@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<ruleset name="TestInpsydePlugin">
+
+  <description>TestInpsydePlugin Rules</description>
+
+  <file>./src</file>
+  <file>./test-inpsyde-plugin.php</file>
+  <exclude-pattern>./views/</exclude-pattern>
+
+  <config name="text_domain" value="inpsyde"/>
+  <config name="testVersion" value="1.0"/>
+  <config name="ignore_warnings_on_exit" value="1"/>
+
+  <rule ref="Inpsyde">
+    <exclude name="NeutronStandard.StrictTypes.RequireStrictTypes.StrictTypes"/>
+    <exclude name="Inpsyde.CodeQuality.ReturnTypeDeclaration.NoReturnType"/>
+    <exclude name="Inpsyde.CodeQuality.ArgumentTypeDeclaration.NoArgumentType"/>
+    <exclude name="PSR1.Methods.CamelCapsMethodName.NotCamelCaps"/>
+    <exclude name="Inpsyde.CodeQuality.VariablesName.SnakeCaseVar"/>
+    <exclude name="WordPress.WP.I18n.MissingTranslatorsComment"/>
+    <exclude name="Inpsyde.CodeQuality.NoAccessors.NoGetter"/>
+    <exclude name="Inpsyde.CodeQuality.NoAccessors.NoSetter"/>
+    <exclude name="Inpsyde.CodeQuality.ElementNameMinimalLength.TooShort"/>
+    <exclude name="Inpsyde.CodeQuality.LineLength.TooLong"/>
+    <exclude name="Inpsyde.CodeQuality.NoElse.ElseFound"/>
+    <exclude name="Inpsyde.CodeQuality.FunctionLength.TooLong"/>
+    <exclude name="Generic.Metrics.NestingLevel.TooHigh"/>
+  </rule>
+
+</ruleset>
