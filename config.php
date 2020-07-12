@@ -1,6 +1,7 @@
 <?php
 
 use TestInpsyde\Wp\Plugin\Services\PageRendererService;
+use TestInpsyde\Wp\Plugin\Services\UserRemoteJsonService;
 use TestInpsyde\Wp\Plugin\Services\ViewService;
 
 $textDomain = 'inpsyde';
@@ -12,10 +13,14 @@ return [
     'textDomain' => $textDomain,
     'services'   => [
         ViewService::class         => [
-            'text_domain' => $textDomain,
         ],
         PageRendererService::class => [
-            'text_domain' => $textDomain,
+            'textDomain' => $textDomain,
+        ],
+        UserRemoteJsonService::class         => [
+            'baseUri' => 'https://jsonplaceholder.typicode.com',
+            'timeout' => 7.7,
+            'debug' => WP_DEBUG ?? false,
         ],
     ],
 ];

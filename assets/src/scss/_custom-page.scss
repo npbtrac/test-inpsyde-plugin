@@ -16,4 +16,14 @@
   &__content {
     padding: 24px 16px 24px;
   }
+
+  &__grid__order-number, &__grid__id, &__grid__username {
+    width: 1%;
+    word-break: keep-all;
+
+    & > a {
+      word-break: keep-all;
+      text-decoration: none;
+    }
+  }
 }

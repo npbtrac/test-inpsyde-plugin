@@ -8,3 +8,6 @@
 - Add PHP Coding Standards (using PHPCS)
   - At first, I intended to use WordPress rules but then I discover Inpsyde rules on GitHub https://github.com/inpsyde/php-coding-standards -> I use it (added .editorconfig for stuffs)
   - I use this for checking phpcs on commits https://github.com/bjornjohansen/wp-pre-commit-hook
+  - I modified the rules I found here https://github.com/inpsyde/paypal-plus-plugin/blob/develop/phpcs.xml.dist, to exclude some rule to match my convention (e.g. use variable for text domain. I may learn why VIP use this rule later).
+  
+- Add webpack to have js and scss compiled

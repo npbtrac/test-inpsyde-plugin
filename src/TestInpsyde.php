@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Container\Container;
 use TestInpsyde\Wp\Plugin\Interfaces\WPPluginInterface;
 use TestInpsyde\Wp\Plugin\Services\PageRendererService;
+use TestInpsyde\Wp\Plugin\Services\UserRemoteJsonService;
 use TestInpsyde\Wp\Plugin\Services\ViewService;
 use TestInpsyde\Wp\Plugin\Traits\ServiceTrait;
 use TestInpsyde\Wp\Plugin\Traits\ConfigTrait;
@@ -132,6 +133,8 @@ class TestInpsyde extends Container implements WPPluginInterface
     public function initPlugin()
     {
         add_action('init', [$this, 'addCustomRewriteRules']);
+        add_action('wp_ajax_get_single_user', [$this, 'renderSingleUserResponse']);
+        add_action('wp_ajax_nopriv_get_single_user', [$this, 'renderSingleUserResponse']);
 
         // We use `parse_query` hook for allowing widgets to be initialized
         add_action('parse_query', [$this, 'renderCustomInpsydeResponse'], 77);
@@ -178,10 +181,40 @@ class TestInpsyde extends Container implements WPPluginInterface
         $pagename = get_query_var('pagename');
 
         if (static::CUSTOM_ENDPOINT_NAME === $pagename) {
+            /** @var UserRemoteJsonService $userRemoteJsonService */
+            $userRemoteJsonService = $this->getService(UserRemoteJsonService::class);
+            $users                 = $userRemoteJsonService->getList();
+
             /** @var PageRendererService $pageRendererService */
             $pageRendererService = $this->getService(PageRendererService::class);
-
-            $pageRendererService->render($pagename);
+            $pageRendererService->render($pagename, [
+                'users'      => $users,
+                'textDomain' => $this->textDomain,
+            ]);
         }
+    }
+
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public function renderSingleUserResponse()
+    {
+        $userId = $_GET['id'] ?? null;
+
+        /** @var UserRemoteJsonService $userRemoteJsonService */
+        $userRemoteJsonService = $this->getService(UserRemoteJsonService::class);
+        $user                  = $userRemoteJsonService->getSingle($userId);
+
+        dump($user);
+        die($userId);
+
+        /** @var PageRendererService $pageRendererService */
+        $pageRendererService = $this->getService(PageRendererService::class);
+        $pageRendererService->render('_view-user', [
+            'user'       => $user,
+            'textDomain' => $this->textDomain,
+        ]);
+
+        wp_die();
     }
 }

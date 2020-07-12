@@ -9,7 +9,6 @@ use TestInpsyde\Wp\Plugin\Traits\WPAttributeTrait;
 class ViewService
 {
     use ConfigTrait;
-    use WPAttributeTrait;
     use ServiceTrait;
 
     public $basePath;
@@ -32,9 +31,12 @@ class ViewService
      */
     public function render($viewFilePath, $params = [])
     {
+        global $wp_query;
+
         $extension = '.php';
         // phpcs:ignore WordPress.PHP.DontExtract.extract_extract
-        extract($params);
+        $wp_query->query_vars['viewParams'] = $params;
+
         if (strpos($viewFilePath, '/') === 1) {
             return load_template($viewFilePath, false);
         } elseif (! empty($template_content = locate_template($viewFilePath.$extension, true, false))) {

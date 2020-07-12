@@ -5,13 +5,13 @@
 - Submit code to GitHub. When you will submit it for review, make sure the user jobs@inpsyde.com has read access to it.
 
 ### Task Description
-- We ask you to write a WordPress plugin.
+- We ask you to write a WordPress plugin. - **Done**
   
   When installed, the plugin has to make available a custom endpoint on the WordPress site. With “custom endpoint” we mean an arbitrary URL not recognized by WP as a standard URL, like a permalink or so.
   
   __**Note that this is not a REST endpoint.**__
-
-- When a visitor navigates to that endpoint, the plugin has to send an HTTP request to a REST API endpoint. The API is available at https://jsonplaceholder.typicode.com and the endpoint to call is /users (https://jsonplaceholder.typicode.com/users)
+    
+- When a visitor navigates to that endpoint, the plugin has to send an HTTP request to a REST API endpoint. The API is available at https://jsonplaceholder.typicode.com and the endpoint to call is /users (https://jsonplaceholder.typicode.com/users) - **Done**
 
 - The plugin will parse the JSON response and will use it to build and display an HTML table.
   If you want you can call this endpoint using AJAX, but that is optional.

@@ -16,7 +16,6 @@ use TestInpsyde\Wp\Plugin\Traits\WPAttributeTrait;
 class PageRendererService
 {
     use ConfigTrait;
-    use WPAttributeTrait;
     use ServiceTrait;
 
     /**
@@ -51,20 +50,22 @@ class PageRendererService
         );
     }
 
+    /** @noinspection PhpFullyQualifiedNameUsageInspection */
     /**
      * Render custom page with corresponding pagename (slug)
      *
-     * @param $pagename
+     * @param string $pagename Name (slug) of page to be rendered
+     * @param array $params Array of params to put to views
      *
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    public function render($pagename)
+    public function render($pagename, $params = [])
     {
         /** @var ViewService $viewService */
         $viewService = $this->getContainer()->getService(ViewService::class);
 
         // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
-        echo $viewService->render('views/'.$pagename);
+        echo $viewService->render('views/page/'.$pagename, $params);
         exit;
     }
 }
