@@ -5,6 +5,7 @@
 
 use TestInpsyde\Wp\Plugin\TestInpsyde;
 
+// phpcs:ignore PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace
 if ( ! defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
@@ -13,17 +14,18 @@ if ( ! defined('ABSPATH')) {
 $viewService = TestInpsyde::getServiceView();
 $textDomain  = $viewService->textDomain;
 
+
 get_header();
 ?>
 
 <main id="site-content" role="main">
     <article class="custom-page">
-        <header class="custom-page__header entry-header">
+        <header class="entry-header custom-page__header">
             <div class="entry-header-inner">
-                <h1 class="entry-title"><?php echo __('Custom Inpsyde', $textDomain) ?></h1>
+                <h1 class="entry-title"><?php echo esc_html(__('Custom Inpsyde', $textDomain)) ?></h1>
             </div><!-- .archive-header-inner -->
         </header>
-        <div class="custom-page__content post-inner">
+        <div class="post-inner custom-page__content">
             <div class="entry-content">
 
                 page content

@@ -2,7 +2,7 @@
 
 namespace TestInpsyde\Wp\Plugin\Interfaces;
 
-interface WPPlugin
+interface WPPluginInterface
 {
     public function initPlugin();
 }

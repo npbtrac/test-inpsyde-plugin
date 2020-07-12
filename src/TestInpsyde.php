@@ -5,18 +5,28 @@ namespace TestInpsyde\Wp\Plugin;
 
 use Exception;
 use Illuminate\Container\Container;
-use TestInpsyde\Wp\Plugin\Interfaces\WPPlugin;
+use TestInpsyde\Wp\Plugin\Interfaces\WPPluginInterface;
+use TestInpsyde\Wp\Plugin\Services\PageRendererService;
 use TestInpsyde\Wp\Plugin\Services\ViewService;
 use TestInpsyde\Wp\Plugin\Traits\ServiceTrait;
 use TestInpsyde\Wp\Plugin\Traits\ConfigTrait;
 use TestInpsyde\Wp\Plugin\Traits\WPAttributeTrait;
 
-class TestInpsyde extends Container implements WPPlugin
+/**
+ * Class TestInpsyde
+ * @package TestInpsyde\Wp\Plugin
+ */
+class TestInpsyde extends Container implements WPPluginInterface
 {
     use ConfigTrait;
     use WPAttributeTrait;
 
     const CUSTOM_ENDPOINT_NAME = 'custom-inpsyde';
+
+    /**
+     * @var string Version of this plugin
+     */
+    public $version;
 
     /** @noinspection PhpUnusedElementInspection */
     /**
@@ -38,7 +48,8 @@ class TestInpsyde extends Container implements WPPlugin
     {
         $this->bindConfig($config);
 
-        if (! empty($services = $config['services'] ?? null)) {
+        // phpcs:ignore PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace
+        if ( ! empty($services = $config['services'] ?? null)) {
             $this->registerServices($services);
         }
     }
@@ -109,7 +120,8 @@ class TestInpsyde extends Container implements WPPlugin
             static::setInstance(new static($config));
         }
 
-        if (! static::getInstance() instanceof static) {
+        // phpcs:ignore PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace
+        if ( ! static::getInstance() instanceof static) {
             throw new Exception('No plugin initialized.');
         }
     }
@@ -166,12 +178,10 @@ class TestInpsyde extends Container implements WPPlugin
         $pagename = get_query_var('pagename');
 
         if (static::CUSTOM_ENDPOINT_NAME === $pagename) {
-            /** @var ViewService $viewService */
-            $viewService = $this->getService(ViewService::class);
+            /** @var PageRendererService $pageRendererService */
+            $pageRendererService = $this->getService(PageRendererService::class);
 
-            // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
-            echo $viewService->render('views/'.$pagename);
-            exit;
+            $pageRendererService->render($pagename);
         }
     }
 }

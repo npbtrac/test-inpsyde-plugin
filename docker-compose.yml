@@ -46,7 +46,12 @@ services:
     volumes:
       - ${BASE_DIR}:${PROJECT_MOUNT_PATH}
     working_dir: ${PROJECT_MOUNT_PATH}
-
+  node:
+    image: node:12.18.2
+    container_name: "${PROJECT_NAME}_node"
+    volumes:
+      - ${BASE_DIR}:${PROJECT_MOUNT_PATH}
+    working_dir: ${PROJECT_MOUNT_PATH}
   nginx:
     image: wodby/nginx:$NGINX_TAG
     container_name: "${PROJECT_NAME}_nginx"

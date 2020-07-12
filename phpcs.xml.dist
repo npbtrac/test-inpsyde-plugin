@@ -5,7 +5,7 @@
 
   <file>./src</file>
   <file>./test-inpsyde-plugin.php</file>
-  <exclude-pattern>./views/</exclude-pattern>
+  <exclude-pattern>./docker/</exclude-pattern>
 
   <config name="text_domain" value="inpsyde"/>
   <config name="testVersion" value="1.0"/>
@@ -18,6 +18,7 @@
     <exclude name="PSR1.Methods.CamelCapsMethodName.NotCamelCaps"/>
     <exclude name="Inpsyde.CodeQuality.VariablesName.SnakeCaseVar"/>
     <exclude name="WordPress.WP.I18n.MissingTranslatorsComment"/>
+    <exclude name="WordPress.WP.I18n.NonSingularStringLiteralDomain"/>
     <exclude name="Inpsyde.CodeQuality.NoAccessors.NoGetter"/>
     <exclude name="Inpsyde.CodeQuality.NoAccessors.NoSetter"/>
     <exclude name="Inpsyde.CodeQuality.ElementNameMinimalLength.TooShort"/>
