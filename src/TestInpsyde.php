@@ -181,6 +181,10 @@ class TestInpsyde extends Container implements WPPluginInterface
         $pagename = get_query_var('pagename');
 
         if (static::CUSTOM_ENDPOINT_NAME === $pagename) {
+            // Set global $wp_query to 404 to avoid unwanted warnings
+            global $wp_query;
+            $wp_query->set_404();
+
             /** @var UserRemoteJsonService $userRemoteJsonService */
             $userRemoteJsonService = $this->getService(UserRemoteJsonService::class);
             $users                 = $userRemoteJsonService->getList();
@@ -199,14 +203,13 @@ class TestInpsyde extends Container implements WPPluginInterface
      */
     public function renderSingleUserResponse()
     {
-        $userId = $_GET['id'] ?? null;
+        if (isset($_GET['id'])) {
+            $userId = intval($_GET['id']);
+        }
 
         /** @var UserRemoteJsonService $userRemoteJsonService */
         $userRemoteJsonService = $this->getService(UserRemoteJsonService::class);
         $user                  = $userRemoteJsonService->getSingle($userId);
-
-        dump($user);
-        die($userId);
 
         /** @var PageRendererService $pageRendererService */
         $pageRendererService = $this->getService(PageRendererService::class);
@@ -214,7 +217,5 @@ class TestInpsyde extends Container implements WPPluginInterface
             'user'       => $user,
             'textDomain' => $this->textDomain,
         ]);
-
-        wp_die();
     }
 }

@@ -36,10 +36,11 @@ class ViewService
         $extension = '.php';
         // phpcs:ignore WordPress.PHP.DontExtract.extract_extract
         $wp_query->query_vars['viewParams'] = $params;
-
         if (strpos($viewFilePath, '/') === 1) {
-            return load_template($viewFilePath, false);
-        } elseif (! empty($template_content = locate_template($viewFilePath.$extension, true, false))) {
+            return load_template($viewFilePath.$extension, false);
+
+            // phpcs:ignore PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace
+        } elseif ( ! empty($template_content = locate_template($viewFilePath.$extension, true, false))) {
             return $template_content;
         } elseif (file_exists($this->basePath.DIRECTORY_SEPARATOR.$viewFilePath.$extension)) {
             return load_template($this->basePath.DIRECTORY_SEPARATOR.$viewFilePath.$extension, false);

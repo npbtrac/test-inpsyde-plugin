@@ -3,7 +3,6 @@
 
 namespace TestInpsyde\Wp\Plugin\Services;
 
-
 use GuzzleHttp\Client;
 use TestInpsyde\Wp\Plugin\Traits\ConfigTrait;
 use TestInpsyde\Wp\Plugin\Traits\ServiceTrait;
@@ -34,13 +33,17 @@ class UserRemoteJsonService
         ]);
     }
 
-    public function getList() {
+    public function getList()
+    {
         $response = $this->_httpClient->request('GET', '/users');
+
         return json_decode($response->getBody()->getContents(), true);
     }
 
-    public function getSingle($id) {
-        $response = $this->_httpClient->request('GET', sprintf('/user/%s', $id));
+    public function getSingle($id)
+    {
+        $response = $this->_httpClient->request('GET', sprintf('/users/%s', $id));
+
         return json_decode($response->getBody()->getContents(), true);
     }
 }

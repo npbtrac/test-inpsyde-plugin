@@ -19,14 +19,21 @@ $user        = $viewParams['user'] ?? [];
 <div class="user-details">
     <header class="entry-header">
         <div class="entry-header-inner">
-            <h3 class="entry-title"><?php echo esc_html(sprintf(__('User Details ID %s', $textDomain),
-                    $user['id'])) ?></h3>
+            <h3 class="entry-title"><?php
+                echo esc_html(
+                    sprintf(
+                        __('User Details ID %s', $textDomain),
+                        $user['id']
+                    )
+                )
+                ?></h3>
         </div>
     </header>
 
     <div class="entry-content">
 
         <?php
+        // phpcs:ignore PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace
         if ( ! empty($user)) {
             ?>
             <table class="user-details__grid">
@@ -56,9 +63,10 @@ $user        = $viewParams['user'] ?? [];
                 </tr>
             </table>
             <?php
+        } else {
+            echo esc_html(__('No User Data.', $textDomain));
         }
         ?>
 
     </div>
 </div>
-</main>

@@ -65,9 +65,8 @@ define( 'WP_CACHE_KEY_SALT', 'pCRS]IXaHpP!Al]OTY3rTA|3/7v/g4|!8D2r<L{<RYU<E!Y`fR
 $table_prefix = 'wp_';
 
 
-
-
 /* That's all, stop editing! Happy blogging. */
+define('WP_DEBUG', true);
 
 /** Absolute path to the WordPress directory. */
 if ( ! defined( 'ABSPATH' ) )

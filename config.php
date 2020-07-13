@@ -7,7 +7,7 @@ use TestInpsyde\Wp\Plugin\Services\ViewService;
 $textDomain = 'inpsyde';
 
 return [
-    'version'    => '0.0.2',
+    'version'    => '0.0.6',
     'basePath'   => __DIR__,
     'baseUrl'    => plugins_url(null, __FILE__),
     'textDomain' => $textDomain,
@@ -20,7 +20,7 @@ return [
         UserRemoteJsonService::class         => [
             'baseUri' => 'https://jsonplaceholder.typicode.com',
             'timeout' => 7.7,
-            'debug' => WP_DEBUG ?? false,
+            'debug' => false,
         ],
     ],
 ];
