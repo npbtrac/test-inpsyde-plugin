@@ -133,6 +133,11 @@ class TestInpsyde extends Container implements WPPluginInterface
      */
     public function initPlugin()
     {
+        // Load Text Domain
+        $locale = determine_locale();
+        $mofile = $locale.'.mo';
+        load_textdomain($this->textDomain, $this->basePath.'/languages/'.$mofile);
+
         add_action('init', [$this, 'addCustomRewriteRules']);
         add_action('wp_ajax_get_single_user', [$this, 'renderSingleUserResponse']);
         add_action('wp_ajax_nopriv_get_single_user', [$this, 'renderSingleUserResponse']);
