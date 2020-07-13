@@ -131,7 +131,7 @@ class TestInpsyde extends Container implements WPPluginInterface
     /**
      * Initialize all needed things for this plugin: hooks, assignments ...
      */
-    public function initPlugin()
+    public function initPlugin(): void
     {
         // Load Text Domain
         $locale = determine_locale();
@@ -180,6 +180,7 @@ class TestInpsyde extends Container implements WPPluginInterface
     /**
      * Handle response for custom endpoint
      *
+     * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function renderCustomInpsydeResponse()
@@ -212,11 +213,16 @@ class TestInpsyde extends Container implements WPPluginInterface
         }
     }
 
+    /** @noinspection PhpFullyQualifiedNameUsageInspection */
     /**
+     * Handle response for single user request
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function renderSingleUserResponse()
     {
+        $userId = null;
         if (isset($_GET['id'])) {
             $userId = intval($_GET['id']);
         }

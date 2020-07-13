@@ -14,8 +14,10 @@ trait ServiceTrait
 
     abstract public function init();
 
+
     /**
      * @param Container $container
+     * @noinspection PhpUnusedDeclarationInspection
      */
     public function setContainer(Container $container)
     {

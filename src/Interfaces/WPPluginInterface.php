@@ -4,5 +4,8 @@ namespace TestInpsyde\Wp\Plugin\Interfaces;
 
 interface WPPluginInterface
 {
-    public function initPlugin();
+    /**
+     * A method to apply all actions to plugins after configured with params: apply hooks, set up something
+     */
+    public function initPlugin(): void;
 }

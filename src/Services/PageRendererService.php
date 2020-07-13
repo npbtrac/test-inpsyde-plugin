@@ -6,7 +6,6 @@ namespace TestInpsyde\Wp\Plugin\Services;
 use TestInpsyde\Wp\Plugin\TestInpsyde;
 use TestInpsyde\Wp\Plugin\Traits\ConfigTrait;
 use TestInpsyde\Wp\Plugin\Traits\ServiceTrait;
-use TestInpsyde\Wp\Plugin\Traits\WPAttributeTrait;
 
 /**
  * Class PageRendererService

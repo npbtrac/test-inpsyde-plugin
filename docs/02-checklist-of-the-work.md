@@ -18,3 +18,5 @@
 
 - Add translation for domain `inpsyde`
 - Apply caching for remote data fetching using transient
+
+- Refactor to have green sign on all files with PHPStorm

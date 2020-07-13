@@ -36,6 +36,7 @@ class UserRemoteJsonService
         ]);
     }
 
+    /** @noinspection PhpFullyQualifiedNameUsageInspection */
     /**
      * Get list of users
      *
@@ -47,6 +48,7 @@ class UserRemoteJsonService
         return $this->getResponse('GET', '/users');
     }
 
+    /** @noinspection PhpFullyQualifiedNameUsageInspection */
     /**
      * Get details of a single user
      *
@@ -60,12 +62,13 @@ class UserRemoteJsonService
         return $this->getResponse('GET', sprintf('/users/%s', $id));
     }
 
+    /** @noinspection PhpFullyQualifiedNameUsageInspection */
     /**
      * Get remote response with 120 seconds cache
      *
      * @param $method
      * @param string $uri
-     * @param null $options
+     * @param array $options
      *
      * @return mixed|\Psr\Http\Message\ResponseInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
