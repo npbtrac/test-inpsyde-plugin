@@ -15,3 +15,6 @@
   - Click on the link, ajax called to fetch single user data. (Use data attributes)
   - Allow client-side caching for remote ajax (url that already fetched successfully would not be re-fetched)
   - Click on same item will collapse/expand the details panel (one with underline)
+
+- Add translation for domain `inpsyde`
+- Apply caching for remote data fetching using transient

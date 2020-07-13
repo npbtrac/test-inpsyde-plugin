@@ -8,7 +8,7 @@ jQuery(document).ready(function ($) {
 
     // https://css-tricks.com/snippets/jquery/compare-jquery-objects/
     if ($currentClickedElement && $currentClickedElement[0] === $(this)[0]) {
-      $tmpRow.slideToggle(700);
+      $tmpRow.slideToggle(300);
     } else {
       if ($currentClickedElement) {
         $currentClickedElement.removeClass('active');
@@ -19,7 +19,7 @@ jQuery(document).ready(function ($) {
       $currentRow.after($tmpRow);
 
       $tmpRow.addClass('processing').removeClass('error');
-      $tmpRow.slideDown(700);
+      $tmpRow.slideDown(300);
 
       let ajaxUrl = $(this).data('ajax-html-url');
       $currentClickedElement = $(this);
