@@ -46,12 +46,24 @@
     background-repeat: no-repeat;
   }
 
+  &__grid__row--after.error {
+    & > td {
+      border: 1px solid #ff4648;
+      padding: 2rem;
+      margin: 1rem;
+    }
+  }
+
   &__grid__row--after .user-details {
     padding: 2rem 0;
   }
 
   &__grid__row--after .entry-title {
     margin-top: 0;
+  }
+
+  a[data-ajax-html-enabled="true"].active {
+    text-decoration: underline;
   }
 }
 

@@ -11,3 +11,7 @@
   - I modified the rules I found here https://github.com/inpsyde/paypal-plus-plugin/blob/develop/phpcs.xml.dist, to exclude some rule to match my convention (e.g. use variable for text domain. I may learn why VIP use this rule later).
   
 - Add webpack to have js and scss compiled
+- Complete FE workflow:
+  - Click on the link, ajax called to fetch single user data. (Use data attributes)
+  - Allow client-side caching for remote ajax (url that already fetched successfully would not be re-fetched)
+  - Click on same item will collapse/expand the details panel (one with underline)

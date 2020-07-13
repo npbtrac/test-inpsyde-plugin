@@ -1,31 +1,48 @@
 jQuery(document).ready(function ($) {
-  // let tmpRow = document.createElement("tr").classList;
-  // tmpRow.className = 'custom-page__grid__row custom-page__grid__row--after';
-
   let $tmpRow = $('<tr class="custom-page__grid__row custom-page__grid__row--after"></tr>');
+  let $currentClickedElement;
+  let remoteContent = [];
 
   $('[data-ajax-html-enabled="true"]').click(function (e) {
     e.preventDefault();
 
-    let $currentRow = $(this).parents('.custom-page__grid__row');
+    // https://css-tricks.com/snippets/jquery/compare-jquery-objects/
+    if ($currentClickedElement && $currentClickedElement[0] === $(this)[0]) {
+      $tmpRow.slideToggle(700);
+    } else {
+      if ($currentClickedElement) {
+        $currentClickedElement.removeClass('active');
+      }
+      let $currentRow = $(this).parents('.custom-page__grid__row');
 
-    // let $tmpRow = $('<tr class="custom-page__grid__row custom-page__grid__row--after"><td colspan="' + $currentRow.find('> td').length + '"></td></tr>');
-    $tmpRow.html('<td colspan="' + $currentRow.find('> td').length + '"></td>');
-    $currentRow.after($tmpRow);
+      $tmpRow.html('<td colspan="' + $currentRow.find('> td').length + '"></td>');
+      $currentRow.after($tmpRow);
 
-    $tmpRow.addClass('processing');
-    $tmpRow.slideDown(300);
+      $tmpRow.addClass('processing').removeClass('error');
+      $tmpRow.slideDown(700);
 
-    let ajaxUrl = $(this).data('ajax-html-url');
-    $.ajax({
-      url: ajaxUrl,
-      dataType: 'html',
-      context: $(this),
-    }).success(function (htmlData) {
-      console.log('clicked');
-      $('.custom-page__grid__row--after').removeClass('processing');
+      let ajaxUrl = $(this).data('ajax-html-url');
+      $currentClickedElement = $(this);
+      $currentClickedElement.addClass('active');
 
-      $('.custom-page__grid__row--after > td').html(htmlData);
-    });
+      if (remoteContent[ajaxUrl]) {
+        $('.custom-page__grid__row--after').removeClass('processing');
+        $('.custom-page__grid__row--after > td').html(remoteContent[ajaxUrl]);
+      } else {
+        $.ajax({
+          url: ajaxUrl,
+          dataType: 'html',
+          context: $(this),
+        }).success(function (htmlData) {
+          let ajaxUrl = $(this).data('ajax-html-url');
+          remoteContent[ajaxUrl] = htmlData;
+          $('.custom-page__grid__row--after').removeClass('processing');
+          $('.custom-page__grid__row--after > td').html(htmlData);
+        }).error(function () {
+          $('.custom-page__grid__row--after').removeClass('processing').addClass('error');
+          $('.custom-page__grid__row--after > td').html($(this).data('ajax-html-error-message'));
+        });
+      }
+    }
   });
 }(jQuery));

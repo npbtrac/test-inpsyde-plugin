@@ -7,7 +7,7 @@ use TestInpsyde\Wp\Plugin\Services\ViewService;
 $textDomain = 'inpsyde';
 
 return [
-    'version'    => '0.0.6',
+    'version'    => '0.1.0',
     'basePath'   => __DIR__,
     'baseUrl'    => plugins_url(null, __FILE__),
     'textDomain' => $textDomain,

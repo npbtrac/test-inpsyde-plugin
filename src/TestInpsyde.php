@@ -4,6 +4,7 @@
 namespace TestInpsyde\Wp\Plugin;
 
 use Exception;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Container\Container;
 use TestInpsyde\Wp\Plugin\Interfaces\WPPluginInterface;
 use TestInpsyde\Wp\Plugin\Services\PageRendererService;
@@ -185,15 +186,23 @@ class TestInpsyde extends Container implements WPPluginInterface
             global $wp_query;
             $wp_query->set_404();
 
-            /** @var UserRemoteJsonService $userRemoteJsonService */
-            $userRemoteJsonService = $this->getService(UserRemoteJsonService::class);
-            $users                 = $userRemoteJsonService->getList();
+            $users = $errorMessage = null;
+            try {
+                /** @var UserRemoteJsonService $userRemoteJsonService */
+                $userRemoteJsonService = $this->getService(UserRemoteJsonService::class);
+                $users                 = $userRemoteJsonService->getList();
+            } catch (ClientException $clientException) {
+                $errorMessage = WP_DEBUG ? $clientException->getMessage() :
+                    __('There is problem with remote data', $this->textDomain);
+            }
+
 
             /** @var PageRendererService $pageRendererService */
             $pageRendererService = $this->getService(PageRendererService::class);
             $pageRendererService->render($pagename, [
-                'users'      => $users,
-                'textDomain' => $this->textDomain,
+                'users'        => $users,
+                'textDomain'   => $this->textDomain,
+                'errorMessage' => $errorMessage,
             ]);
         }
     }
