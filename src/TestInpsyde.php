@@ -4,6 +4,7 @@
 namespace TestInpsyde\Wp\Plugin;
 
 use Exception;
+use WP;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Container\Container;
 use TestInpsyde\Wp\Plugin\Interfaces\WPPluginInterface;
@@ -73,7 +74,7 @@ class TestInpsyde extends Container implements WPPluginInterface
                             $serviceInstance->bindConfig($serviceConfig);
                         }
 
-                        if (in_array(ServiceTrait::class, class_uses($serviceInstance))) {
+                        if (in_array(ServiceTrait::class, class_uses($serviceInstance), true)) {
                             /** @noinspection PhpUndefinedMethodInspection */
                             $serviceInstance->setContainer($container);
                             /** @noinspection PhpUndefinedMethodInspection */
@@ -142,8 +143,8 @@ class TestInpsyde extends Container implements WPPluginInterface
         add_action('wp_ajax_get_single_user', [$this, 'renderSingleUserResponse']);
         add_action('wp_ajax_nopriv_get_single_user', [$this, 'renderSingleUserResponse']);
 
-        // We use `parse_query` hook for allowing widgets to be initialized
-        add_action('parse_query', [$this, 'renderCustomInpsydeResponse'], 77);
+        // We use `wp_loaded` hook for allowing widgets to be initialized, 77 for others to be loaded
+        add_action('wp_loaded', [$this, 'renderCustomInpsydeResponse'], 77);
     }
 
     /**
@@ -157,7 +158,6 @@ class TestInpsyde extends Container implements WPPluginInterface
         // Flush rewrite rules when activate plugins
         flush_rewrite_rules(false);
     }
-
 
     /**
      * @noinspection PhpUnusedDeclarationInspection
@@ -185,29 +185,28 @@ class TestInpsyde extends Container implements WPPluginInterface
      */
     public function renderCustomInpsydeResponse()
     {
-        $pagename = get_query_var('pagename');
+        // We need to parse request here to fetch our needed query_var because this method would be call before main query executed `$pagename = get_query_var( 'pagename' );`
+        $the_wp = new WP();
+        $the_wp->parse_request();
+
+        $pagename = $the_wp->query_vars['pagename'] ?? null;
 
         if (static::CUSTOM_ENDPOINT_NAME === $pagename) {
-            // Set global $wp_query to 404 to avoid unwanted warnings
-            global $wp_query;
-            $wp_query->set_404();
-
             $users = $errorMessage = null;
             try {
                 /** @var UserRemoteJsonService $userRemoteJsonService */
                 $userRemoteJsonService = $this->getService(UserRemoteJsonService::class);
-                $users                 = $userRemoteJsonService->getList();
+                $users = $userRemoteJsonService->getList();
             } catch (ClientException $clientException) {
                 $errorMessage = WP_DEBUG ? $clientException->getMessage() :
                     __('There is problem with remote data', $this->textDomain);
             }
 
-
             /** @var PageRendererService $pageRendererService */
             $pageRendererService = $this->getService(PageRendererService::class);
             $pageRendererService->render($pagename, [
-                'users'        => $users,
-                'textDomain'   => $this->textDomain,
+                'users' => $users,
+                'textDomain' => $this->textDomain,
                 'errorMessage' => $errorMessage,
             ]);
         }
@@ -222,19 +221,16 @@ class TestInpsyde extends Container implements WPPluginInterface
      */
     public function renderSingleUserResponse()
     {
-        $userId = null;
-        if (isset($_GET['id'])) {
-            $userId = intval($_GET['id']);
-        }
+        $userId = filter_input(INPUT_GET, 'id');
 
         /** @var UserRemoteJsonService $userRemoteJsonService */
         $userRemoteJsonService = $this->getService(UserRemoteJsonService::class);
-        $user                  = $userRemoteJsonService->getSingle($userId);
+        $user = $userRemoteJsonService->getSingle($userId);
 
         /** @var PageRendererService $pageRendererService */
         $pageRendererService = $this->getService(PageRendererService::class);
         $pageRendererService->render('_view-user', [
-            'user'       => $user,
+            'user' => $user,
             'textDomain' => $this->textDomain,
         ]);
     }

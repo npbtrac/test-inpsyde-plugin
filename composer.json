@@ -28,5 +28,11 @@
 		"psr-4": {
 			"TestInpsyde\\Wp\\Plugin\\": "src"
 		}
-	}
+	},
+  "scripts": {
+    "test": [
+      "composer update --dev",
+      "\"vendor/bin/phpcs\""
+    ]
+  }
 }

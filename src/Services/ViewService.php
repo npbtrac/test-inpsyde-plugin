@@ -2,6 +2,7 @@
 
 namespace TestInpsyde\Wp\Plugin\Services;
 
+use Exception;
 use TestInpsyde\Wp\Plugin\Traits\ConfigTrait;
 use TestInpsyde\Wp\Plugin\Traits\ServiceTrait;
 
@@ -19,14 +20,17 @@ class ViewService
     public function init()
     {
         $this->basePath = $this->getContainer()->basePath;
-        $this->baseUrl  = $this->getContainer()->baseUrl;
+        $this->baseUrl = $this->getContainer()->baseUrl;
     }
 
     /**
+     * Render a view file
+     *
      * @param $viewFilePath
      * @param array $params
      *
-     * @return string|void|null
+     * @return string|void
+     * @throws Exception
      */
     public function render($viewFilePath, $params = [])
     {
@@ -35,24 +39,24 @@ class ViewService
         $extension = '.php';
         // phpcs:ignore WordPress.PHP.DontExtract.extract_extract
         $wp_query->query_vars['viewParams'] = $params;
+
         if (strpos($viewFilePath, '/') === 1) {
             return load_template($viewFilePath.$extension, false);
+        }
 
-            // phpcs:ignore PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace
-        } elseif ( ! empty($template_content = locate_template($viewFilePath.$extension, true, false))) {
-            return $template_content;
-        } elseif (file_exists($this->basePath.DIRECTORY_SEPARATOR.$viewFilePath.$extension)) {
+        $templateContent = locate_template($viewFilePath.$extension, true, false);
+        // phpcs:ignore PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace
+        if ( ! empty($templateContent)) {
+            return $templateContent;
+        }
+
+        if (file_exists($this->basePath.DIRECTORY_SEPARATOR.$viewFilePath.$extension)) {
             return load_template($this->basePath.DIRECTORY_SEPARATOR.$viewFilePath.$extension, false);
         }
 
-        $errorMessage = sprintf(
-            "View file not working: %s.\nTrace: %s",
-            $viewFilePath.$extension,
-            print_r(debug_backtrace(), true)
-        );
-        // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
-        trigger_error($errorMessage, E_USER_WARNING);
-
-        return null;
+        throw new Exception(sprintf(
+            "View file not working: %s.\n",
+            $viewFilePath.$extension
+        ));
     }
 }

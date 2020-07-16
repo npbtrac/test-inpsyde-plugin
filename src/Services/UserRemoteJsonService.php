@@ -21,18 +21,18 @@ class UserRemoteJsonService
     /**
      * @var Client
      */
-    protected $_httpClient;
+    protected $httpClient;
 
     /**
      * @inheritDoc
      */
     public function init()
     {
-        $this->_httpClient = new Client([
+        $this->httpClient = new Client([
             // Base URI is used with relative requests
             'base_uri' => $this->baseUri,
-            'timeout'  => $this->timeout,
-            'debug'    => $this->debug,
+            'timeout' => $this->timeout,
+            'debug' => $this->debug,
         ]);
     }
 
@@ -76,14 +76,15 @@ class UserRemoteJsonService
     public function getResponse($method, $uri = '', $options = [])
     {
         $cacheKey = md5(json_encode([
-            'caller'  => 'getResponse',
+            'caller' => 'getResponse',
             'baseUri' => $this->baseUri,
-            'method'  => $method,
-            'uri'     => $uri,
+            'method' => $method,
+            'uri' => $uri,
             'options' => $options,
         ]));
-        if (empty($result = get_transient($cacheKey))) {
-            $response = $this->_httpClient->request($method, $uri, $options);
+        $result = get_transient($cacheKey);
+        if (empty($result)) {
+            $response = $this->httpClient->request($method, $uri, $options);
             if ((200 === $response->getStatusCode())) {
                 $result = json_decode($response->getBody()->getContents(), true);
                 set_transient($cacheKey, $result, 120);

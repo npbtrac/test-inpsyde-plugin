@@ -10,10 +10,9 @@ trait ServiceTrait
     /**
      * @var Container|null
      */
-    protected $_container = null;
+    protected $container = null;
 
     abstract public function init();
-
 
     /**
      * @param Container $container
@@ -21,8 +20,8 @@ trait ServiceTrait
      */
     public function setContainer(Container $container)
     {
-        if (null === $this->_container) {
-            $this->_container = $container;
+        if (null === $this->container) {
+            $this->container = $container;
         }
     }
 
@@ -31,6 +30,6 @@ trait ServiceTrait
      */
     public function getContainer(): Container
     {
-        return $this->_container;
+        return $this->container;
     }
 }
