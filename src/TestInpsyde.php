@@ -65,26 +65,26 @@ class TestInpsyde extends Container implements WPPluginInterface
     protected function registerServices($services)
     {
         foreach ($services as $serviceClassname => $serviceConfig) {
-            if (class_exists($serviceClassname)) {
-                $this->bind(
-                    $serviceClassname,
-                    function ($container) use ($serviceClassname, $serviceConfig) {
-                        $serviceInstance = new $serviceClassname();
-                        if (method_exists($serviceInstance, 'bindConfig')) {
-                            $serviceInstance->bindConfig($serviceConfig);
-                        }
+            $this->bind(
+                $serviceClassname,
+                function ($container) use ($serviceClassname, $serviceConfig) {
+                    $serviceInstance = new $serviceClassname();
 
-                        if (in_array(ServiceTrait::class, class_uses($serviceInstance), true)) {
-                            /** @noinspection PhpUndefinedMethodInspection */
-                            $serviceInstance->setContainer($container);
-                            /** @noinspection PhpUndefinedMethodInspection */
-                            $serviceInstance->init();
-                        }
-
-                        return $serviceInstance;
+                    if (in_array(ConfigTrait::class, class_uses($serviceInstance), true)) {
+                        /** @noinspection PhpUndefinedMethodInspection */
+                        $serviceInstance->bindConfig($serviceConfig);
                     }
-                );
-            }
+
+                    if (in_array(ServiceTrait::class, class_uses($serviceInstance), true)) {
+                        /** @noinspection PhpUndefinedMethodInspection */
+                        $serviceInstance->setContainer($container);
+                        /** @noinspection PhpUndefinedMethodInspection */
+                        $serviceInstance->init();
+                    }
+
+                    return $serviceInstance;
+                }
+            );
         }
     }
 
@@ -130,14 +130,32 @@ class TestInpsyde extends Container implements WPPluginInterface
     }
 
     /**
+     * Get application locale
+     *
+     * @return string
+     */
+    public function getLocale()
+    {
+        return determine_locale();
+    }
+
+    /**
+     * Load locale file to textDomain
+     */
+    protected function loadTextDomain()
+    {
+        $locale = $this->getLocale();
+        $mofile = $locale.'.mo';
+        load_textdomain($this->textDomain, $this->basePath.'/languages/'.$mofile);
+    }
+
+    /**
      * Initialize all needed things for this plugin: hooks, assignments ...
      */
     public function initPlugin(): void
     {
         // Load Text Domain
-        $locale = determine_locale();
-        $mofile = $locale.'.mo';
-        load_textdomain($this->textDomain, $this->basePath.'/languages/'.$mofile);
+        $this->loadTextDomain();
 
         add_action('init', [$this, 'addCustomRewriteRules']);
         add_action('wp_ajax_get_single_user', [$this, 'renderSingleUserResponse']);

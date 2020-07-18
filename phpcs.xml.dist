@@ -6,6 +6,7 @@
   <file>./src</file>
   <file>./test-inpsyde-plugin.php</file>
   <exclude-pattern>./docker/</exclude-pattern>
+  <exclude-pattern>./tests/</exclude-pattern>
 
   <config name="text_domain" value="inpsyde"/>
   <config name="testVersion" value="1.0"/>

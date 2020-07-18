@@ -1,0 +1,5 @@
+actor: UnitTester
+modules:
+  enabled:
+    - Asserts
+    - TestInpsyde\Wp\Plugin\Tests\Helper\Unit
