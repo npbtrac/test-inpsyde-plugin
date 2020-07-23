@@ -85,6 +85,7 @@ class UserRemoteJsonService
         $result = get_transient($cacheKey);
         if (empty($result)) {
             $response = $this->httpClient->request($method, $uri, $options);
+            $result = null;
             if ((200 === $response->getStatusCode())) {
                 $result = json_decode($response->getBody()->getContents(), true);
                 set_transient($cacheKey, $result, 120);

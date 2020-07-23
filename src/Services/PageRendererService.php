@@ -53,16 +53,14 @@ class PageRendererService
     /**
      * Render custom page with corresponding pagename (slug)
      *
+     * @param ViewService $viewService View service to use for rendering
      * @param string $pagename Name (slug) of page to be rendered
      * @param array $params Array of params to put to views
      *
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws \Exception
      */
-    public function render($pagename, $params = [])
+    public function render($viewService, $pagename, $params = [])
     {
-        /** @var ViewService $viewService */
-        $viewService = $this->getContainer()->getService(ViewService::class);
-
         // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
         echo $viewService->render('views/page/'.$pagename, $params);
         exit;

@@ -3,6 +3,7 @@
 use Brain\Monkey;
 use Codeception\Stub;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use TestInpsyde\Wp\Plugin\Services\PageRendererService;
 use TestInpsyde\Wp\Plugin\Services\ViewService;
 use TestInpsyde\Wp\Plugin\TestInpsyde;
 use TestInpsyde\Wp\Plugin\TestInpsyde as Testee;
@@ -27,12 +28,21 @@ class TestInpsydeTest extends UnitTestCase
     {
         Monkey\setUp();
         $this->config = [
-            'basePath' => 'http://test-inpsyde-plugin.docker/wp-content/plugins/test-inpsyde-plugin',
+            'basePath' => '/wp-content/plugins/test-inpsyde-plugin',
+            'baseUrl' => 'http://test-inpsyde-plugin.docker/wp-content/plugins/test-inpsyde-plugin',
             'services' => [
                 'A non-existing service',
                 Stub::class,
             ],
             ViewService::class => [
+            ],
+            PageRendererService::class => [
+                'textDomain' => 'qwerty',
+            ],
+            UserRemoteJsonService::class => [
+                'baseUri' => 'https://jsonplaceholder.typicode.com',
+                'timeout' => 7.7,
+                'debug' => false,
             ],
         ];
     }
@@ -42,10 +52,14 @@ class TestInpsydeTest extends UnitTestCase
         Monkey\tearDown();
     }
 
-    // Test Constructor and service registration
+    /**
+     * Test Constructor and service registration
+     *
+     * @throws BindingResolutionException
+     * @throws \Exception
+     */
     public function testInstanceWithConfig()
     {
-        /** @var Testee $testeeInstance */
         $testeeInstance = $this->construct(Testee::class,
             [
                 'config' => $this->config,
@@ -54,8 +68,9 @@ class TestInpsydeTest extends UnitTestCase
             ]
         );
 
+        /** @var Testee $testeeInstance */
         // Test the property `basePath`
-        $this->assertEquals('http://test-inpsyde-plugin.docker/wp-content/plugins/test-inpsyde-plugin',
+        $this->assertEquals('/wp-content/plugins/test-inpsyde-plugin',
             $testeeInstance->basePath);
 
         // Test a correct service to me initialized
@@ -94,5 +109,81 @@ class TestInpsydeTest extends UnitTestCase
             77);
         $testeeInstance->initPlugin();
 
+    }
+
+    /**
+     * Test rewrite rules
+     *
+     * @throws \Exception
+     */
+    public function testAddCustomRewriteRules()
+    {
+        $testeeInstance = $this->make(Testee::class,
+            [
+            ]
+        );
+        /** @var Testee $testeeInstance */
+
+        // We expect rewrite rules must be added in this method
+        expect('add_rewrite_rule')->atLeast()->once();
+        $testeeInstance->addCustomRewriteRules();
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testActivateDeactivatePlugin()
+    {
+        $testeeInstance = $this->make(Testee::class,
+            [
+                'addCustomRewriteRules' => function () {
+
+                },
+            ]
+        );
+
+        /** @var Testee $testeeInstance */
+        // We expect `flush_rewrite_rules` called when plugin activated
+        expect('flush_rewrite_rules')->atLeast()->once();
+        $testeeInstance->activatePlugin();
+
+        // We expect to use `delete_option` to flush `rewrite_rules`
+        expect('delete_option')->atLeast()->once()->with('rewrite_rules');
+        $testeeInstance->deactivatePlugin();
+    }
+
+    public function testRenderCustomInpsydeResponse()
+    {
+        TestInpsyde::initInstanceWithConfig($this->config);
+
+        /** @var UserRemoteJsonService $userRemoteJsonService */
+        $userRemoteJsonService = $this->make(UserRemoteJsonService::class,
+            [
+                'baseUri' => 'https://jsonplaceholder.typicode.net',
+                'timeout' => 7.7,
+                'debug' => false,
+            ]
+        );
+        $userRemoteJsonService->init();
+
+        /** @var PageRendererService $pageRendererService */
+        $pageRendererService = TestInpsyde::getInstance()->getService(PageRendererService::class);
+
+        /** @var ViewService $viewService */
+        $viewService = TestInpsyde::getInstance()->getService(ViewService::class);
+
+        // We only expect Exception for view file not found, not exception on getting remote data
+        expect('locate_template');
+        expect('get_transient');
+        expect('__');
+        $this->expectExceptionMessageMatches('/(.*)(View file not working)(.*)/i');
+        TestInpsyde::getInstance()->renderListUsersResponse($userRemoteJsonService, $viewService, $pageRendererService);
+
+        expect('locate_template');
+        expect('get_transient');
+        expect('__');
+        $this->expectExceptionMessageMatches('/(.*)(View file not working)(.*)/i');
+        TestInpsyde::getInstance()->renderSingleUserResponse(1, $userRemoteJsonService, $viewService,
+            $pageRendererService);
     }
 }

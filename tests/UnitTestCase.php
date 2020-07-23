@@ -3,6 +3,7 @@
 namespace TestInpsyde\Wp\Plugin\Tests;
 
 use Codeception\Test\Unit;
+use ReflectionClass;
 use ReflectionMethod;
 
 class UnitTestCase extends Unit
@@ -59,9 +60,26 @@ class UnitTestCase extends Unit
         )->getMock();
         $reflectionMethod = new ReflectionMethod($className, $method);
         $reflectionMethod->setAccessible(true);
+
         return [
             $testee,
             $reflectionMethod,
         ];
+    }
+
+    /**
+     * @param $obj
+     * @param $prop
+     *
+     * @return mixed
+     * @throws \ReflectionException
+     */
+    protected function accessProtected($obj, $prop)
+    {
+        $reflection = new ReflectionClass($obj);
+        $property = $reflection->getProperty($prop);
+        $property->setAccessible(true);
+
+        return $property->getValue($obj);
     }
 }

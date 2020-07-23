@@ -31,7 +31,7 @@
     "symfony/var-dumper": "^5.1"
   },
   "replace": {
-    "phpunit/phunit": "~9.0.0"
+    "phpunit/phunit": "~8.0.0"
   },
   "autoload": {
     "psr-4": {

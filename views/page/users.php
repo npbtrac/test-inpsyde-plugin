@@ -11,9 +11,9 @@ if ( ! defined('ABSPATH')) {
 }
 
 /** @noinspection PhpUnhandledExceptionInspection */
-$viewService  = TestInpsyde::getServiceView();
-$textDomain   = $viewParams['textDomain'] ?? 'inpsyde';
-$users        = $viewParams['users'] ?? [];
+$viewService = TestInpsyde::getServiceView();
+$textDomain = $viewParams['textDomain'] ?? 'inpsyde';
+$users = $viewParams['users'] ?? [];
 $errorMessage = $viewParams['errorMessage'] ?? null;
 
 get_header();
@@ -41,9 +41,9 @@ get_header();
                     </tr>
                     <?php
                     foreach ($users as $tmpIndex => $user) {
-                        $ajaxHtmlUrl  = add_query_arg([
+                        $ajaxHtmlUrl = add_query_arg([
                             'action' => 'get_single_user',
-                            'id'     => $user['id'],
+                            'id' => $user['id'],
                         ], admin_url('admin-ajax.php'));
                         $errorMessage = __('There is some error happening. Please try again later!', $textDomain);
                         ?>

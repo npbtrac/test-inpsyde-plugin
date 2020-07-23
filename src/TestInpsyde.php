@@ -158,8 +158,8 @@ class TestInpsyde extends Container implements WPPluginInterface
         $this->loadTextDomain();
 
         add_action('init', [$this, 'addCustomRewriteRules']);
-        add_action('wp_ajax_get_single_user', [$this, 'renderSingleUserResponse']);
-        add_action('wp_ajax_nopriv_get_single_user', [$this, 'renderSingleUserResponse']);
+        add_action('wp_ajax_get_single_user', [$this, 'renderCustomInpsydeSingleUserResponse']);
+        add_action('wp_ajax_nopriv_get_single_user', [$this, 'renderCustomInpsydeSingleUserResponse']);
 
         // We use `wp_loaded` hook for allowing widgets to be initialized, 77 for others to be loaded
         add_action('wp_loaded', [$this, 'renderCustomInpsydeResponse'], 77);
@@ -194,6 +194,20 @@ class TestInpsyde extends Container implements WPPluginInterface
         add_rewrite_rule('custom-inpsyde/?$', 'index.php?pagename='.static::CUSTOM_ENDPOINT_NAME, 'top');
     }
 
+    /**
+     * Parse request URL to get `pagename` varaiable
+     *
+     * @return |null
+     */
+    public function getRequestPagename()
+    {
+        // We need to parse request here to fetch our needed query_var because this method would be call before main query executed `$pagename = get_query_var( 'pagename' );`
+        $the_wp = new WP();
+        $the_wp->parse_request();
+
+        return $the_wp->query_vars['pagename'] ?? null;
+    }
+
     /** @noinspection PhpFullyQualifiedNameUsageInspection */
     /**
      * Handle response for custom endpoint
@@ -203,30 +217,19 @@ class TestInpsyde extends Container implements WPPluginInterface
      */
     public function renderCustomInpsydeResponse()
     {
-        // We need to parse request here to fetch our needed query_var because this method would be call before main query executed `$pagename = get_query_var( 'pagename' );`
-        $the_wp = new WP();
-        $the_wp->parse_request();
-
-        $pagename = $the_wp->query_vars['pagename'] ?? null;
+        $pagename = $this->getRequestPagename();
 
         if (static::CUSTOM_ENDPOINT_NAME === $pagename) {
-            $users = $errorMessage = null;
-            try {
-                /** @var UserRemoteJsonService $userRemoteJsonService */
-                $userRemoteJsonService = $this->getService(UserRemoteJsonService::class);
-                $users = $userRemoteJsonService->getList();
-            } catch (ClientException $clientException) {
-                $errorMessage = WP_DEBUG ? $clientException->getMessage() :
-                    __('There is problem with remote data', $this->textDomain);
-            }
+            /** @var UserRemoteJsonService $userRemoteJsonService */
+            $userRemoteJsonService = $this->getService(UserRemoteJsonService::class);
 
             /** @var PageRendererService $pageRendererService */
             $pageRendererService = $this->getService(PageRendererService::class);
-            $pageRendererService->render($pagename, [
-                'users' => $users,
-                'textDomain' => $this->textDomain,
-                'errorMessage' => $errorMessage,
-            ]);
+
+            /** @var ViewService $viewService */
+            $viewService = $this->getService(ViewService::class);
+
+            $this->renderListUsersResponse($userRemoteJsonService, $viewService, $pageRendererService);
         }
     }
 
@@ -237,19 +240,81 @@ class TestInpsyde extends Container implements WPPluginInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    public function renderSingleUserResponse()
+    public function renderCustomInpsydeSingleUserResponse()
     {
         $userId = filter_input(INPUT_GET, 'id');
-
         /** @var UserRemoteJsonService $userRemoteJsonService */
         $userRemoteJsonService = $this->getService(UserRemoteJsonService::class);
-        $user = $userRemoteJsonService->getSingle($userId);
 
         /** @var PageRendererService $pageRendererService */
         $pageRendererService = $this->getService(PageRendererService::class);
-        $pageRendererService->render('_view-user', [
+
+        /** @var ViewService $viewService */
+        $viewService = $this->getService(ViewService::class);
+
+        $this->renderSingleUserResponse($userId, $userRemoteJsonService, $viewService, $pageRendererService);
+
+        // Besure to have ajax call ending here
+        wp_die();
+    }
+
+    /** @noinspection PhpFullyQualifiedNameUsageInspection */
+    /**
+     * @param UserRemoteJsonService $userRemoteJsonService
+     * @param ViewService $viewService
+     * @param PageRendererService $pageRendererService
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
+     */
+    public function renderListUsersResponse(
+        UserRemoteJsonService $userRemoteJsonService,
+        ViewService $viewService,
+        PageRendererService $pageRendererService
+    ) {
+        $users = $errorMessage = null;
+        try {
+            $users = $userRemoteJsonService->getList();
+        } catch (Exception $exception) {
+            $errorMessage = WP_DEBUG ? $exception->getMessage() :
+                __('There is problem with remote data, please try again later!', $this->textDomain);
+        }
+
+        $pageRendererService->render($viewService, 'users', [
+            'users' => $users,
+            'textDomain' => $this->textDomain,
+            'errorMessage' => $errorMessage,
+        ]);
+    }
+
+
+    /** @noinspection PhpFullyQualifiedNameUsageInspection */
+    /**
+     * @param $userId
+     * @param UserRemoteJsonService $userRemoteJsonService
+     * @param ViewService $viewService
+     * @param PageRendererService $pageRendererService
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public function renderSingleUserResponse(
+        $userId,
+        UserRemoteJsonService $userRemoteJsonService,
+        ViewService $viewService,
+        PageRendererService $pageRendererService
+    ) {
+        try {
+            $user = $userRemoteJsonService->getSingle($userId);
+        } catch (Exception $exception) {
+            $errorMessage = WP_DEBUG ? $exception->getMessage() :
+                __('There is problem with remote data, please try again later!', $this->textDomain);
+        }
+
+        $pageRendererService->render($viewService, '_view-user', [
             'user' => $user,
             'textDomain' => $this->textDomain,
+            'errorMessage' => $errorMessage,
         ]);
     }
 }
