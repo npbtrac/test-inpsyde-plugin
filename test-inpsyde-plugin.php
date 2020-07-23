@@ -15,8 +15,8 @@
 use TestInpsyde\Wp\Plugin\TestInpsyde;
 
 // Use autoload if it isn't loaded before.
-// phpcs:ignore PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace
-if ( ! class_exists(TestInpsyde::class)) {
+
+if (!class_exists(TestInpsyde::class)) {
     require_once __DIR__.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php';
 }
 

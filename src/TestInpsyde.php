@@ -272,6 +272,7 @@ class TestInpsyde extends Container implements WPPluginInterface
         ViewService $viewService,
         PageRendererService $pageRendererService
     ) {
+
         $users = $errorMessage = null;
         try {
             $users = $userRemoteJsonService->getList();
@@ -286,7 +287,6 @@ class TestInpsyde extends Container implements WPPluginInterface
             'errorMessage' => $errorMessage,
         ]);
     }
-
 
     /** @noinspection PhpFullyQualifiedNameUsageInspection */
     /**
@@ -304,6 +304,7 @@ class TestInpsyde extends Container implements WPPluginInterface
         ViewService $viewService,
         PageRendererService $pageRendererService
     ) {
+
         try {
             $user = $userRemoteJsonService->getSingle($userId);
         } catch (Exception $exception) {
