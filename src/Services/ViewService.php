@@ -45,8 +45,7 @@ class ViewService
         }
 
         $templateContent = locate_template($viewFilePath.$extension, true, false);
-        // phpcs:ignore PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace
-        if ( ! empty($templateContent)) {
+        if (!empty($templateContent)) {
             return $templateContent;
         }
 

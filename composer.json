@@ -20,7 +20,6 @@
     "illuminate/container": "^7.19"
   },
   "require-dev": {
-    "brainmaestro/composer-git-hooks": "*",
     "inpsyde/php-coding-standards": "^0.13",
     "johnpbloch/wordpress-core": "^5.3",
     "codeception/codeception": "^4.1",
@@ -48,13 +47,5 @@
       "\"./vendor/bin/phpcs\"",
       "php ./vendor/codeception/codeception/codecept run"
     ]
-  },
-  "extra": {
-    "hooks": {
-      "pre-commit": [
-        "echo committing as $(git config user.name)",
-        "composer test"
-      ]
-    }
   }
 }

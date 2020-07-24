@@ -15,7 +15,6 @@
 use TestInpsyde\Wp\Plugin\TestInpsyde;
 
 // Use autoload if it isn't loaded before.
-
 if (!class_exists(TestInpsyde::class)) {
     require_once __DIR__.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php';
 }

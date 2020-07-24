@@ -51,8 +51,7 @@ class TestInpsyde extends Container implements WPPluginInterface
     {
         $this->bindConfig($config);
 
-        // phpcs:ignore PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace
-        if ( ! empty($services = $config['services'] ?? null)) {
+        if (!empty($services = $config['services'] ?? null)) {
             $this->registerServices($services);
         }
     }
@@ -123,8 +122,7 @@ class TestInpsyde extends Container implements WPPluginInterface
             static::setInstance(new static($config));
         }
 
-        // phpcs:ignore PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace
-        if ( ! static::getInstance() instanceof static) {
+        if (!static::getInstance() instanceof static) {
             throw new Exception('No plugin initialized.');
         }
     }
