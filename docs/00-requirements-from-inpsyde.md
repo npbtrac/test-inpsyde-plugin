@@ -14,7 +14,7 @@
 - When a visitor navigates to that endpoint, the plugin has to send an HTTP request to a REST API endpoint. The API is available at https://jsonplaceholder.typicode.com and the endpoint to call is /users (https://jsonplaceholder.typicode.com/users) - **Done**
 
 - The plugin will parse the JSON response and will use it to build and display an HTML table.
-  If you want you can call this endpoint using AJAX, but that is optional.
+  If you want you can call this endpoint using AJAX, but that is optional. - **Done**
  
 - Each row in the HTML table will show the details for a user. The column's id, name, and username are mandatory, but you can show more details if you want.
  
