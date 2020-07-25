@@ -1,14 +1,14 @@
 #!/bin/sh
 
 source "$PWD/wp-content/plugins/test-inpsyde-plugin/.env"
-rm -f "$PWD/wp-config.php"
-
-wp config create \
-  --dbname="$DB_NAME" \
-  --dbuser="$DB_USER" \
-  --dbpass="$DB_PASSWORD" \
-  --dbhost=mariadb \
-  --force
+#rm -f "$PWD/wp-config.php"
+#
+#wp config create \
+#  --dbname="$DB_NAME" \
+#  --dbuser="$DB_USER" \
+#  --dbpass="$DB_PASSWORD" \
+#  --dbhost="$DB_HOST" \
+#  --force
 
 wp core install \
   --url=$PROJECT_BASE_URL \

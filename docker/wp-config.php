@@ -20,16 +20,16 @@
 
 // ** MySQL settings ** //
 /** The name of the database for WordPress */
-define('DB_NAME', 'wordpress');
+define('DB_NAME', getenv('DB_NAME'));
 
 /** MySQL database username */
-define('DB_USER', 'wordpress');
+define('DB_USER', getenv('DB_USER'));
 
 /** MySQL database password */
-define('DB_PASSWORD', 'wordpress');
+define('DB_PASSWORD', getenv('DB_PASSWORD'));
 
 /** MySQL hostname */
-define('DB_HOST', 'mariadb');
+define('DB_HOST', getenv('DB_HOST'));
 
 /** Database Charset to use in creating database tables. */
 define('DB_CHARSET', 'utf8');
@@ -70,7 +70,13 @@ define('WP_DEBUG', true);
 define('WP_DEBUG_LOG', false);
 define('WP_DEBUG_DISPLAY', true);
 
-/** Absolute path to the WordPress directory. */
+// For using multiple domain
+if ( isset( $_SERVER['HTTP_HOST'] ) ) {
+    $http_protocol = isset($_SERVER['HTTPS']) && 'on' === $_SERVER['HTTPS'] ? 'https' : 'http';
+    define('WP_HOME', $http_protocol.'://'.$_SERVER['HTTP_HOST']);
+}
+
+    /** Absolute path to the WordPress directory. */
 if ( ! defined('ABSPATH')) {
     define('ABSPATH', dirname(__FILE__).'/');
 }
