@@ -52,6 +52,50 @@ Each row in the HTML table will show the details for a user. The column's id, na
 ![Showing list of users with id, name, and username on each item](img/user-list.png)
 
 - Clicking on link of ID, Name, Username, it would fire an ajax action to get details of thank clicked user. Ajax URL http://test-inpsyde-plugin.docker/wp-admin/admin-ajax.php?action=get_single_user&id=1 would use `admin-ajax.php`. I don't use `check_ajax_referer` because the ajax URL is a simple one for showing data, no special activities, so I skip the check referrer.
+
+> - We expect some kind of cache for HTTP requests. The rationale behind it is up to you, please make a decision and document it in the README.
+
 - Because clicking on ID, Name, Username would request to a same URL, so I use a variable to store the remote response to avoid making repeated remote requests to make things work faster (https://github.com/npbtrac/test-inpsyde-plugin/blob/master/assets/src/js/_custom-page.js#L28). You can see the clicked item is the one with underline
 ![Clicked item](img/clicked-item.png)
-- Besides, I use server side caching (using transient) to avoid requesting too many time to remote data. (https://github.com/npbtrac/test-inpsyde-plugin/blob/master/src/Services/UserRemoteJsonService.php#L85)
+- Besides, I use server side caching (using transient) to avoid requesting too many times to remote data. (https://github.com/npbtrac/test-inpsyde-plugin/blob/master/src/Services/UserRemoteJsonService.php#L85)
+
+>- Error handling for the external HTTP requests is also required: navigation must not be disrupted if a request fails.
+
+I turn my internet off to simulate the case when remote server down or connection unstable, it will show errors from curl because we are in Debug mode
+![Error on list](img/error-handling-list.png)
+![Error on details](img/error-handling-detail.png)
+
+Code here https://github.com/npbtrac/test-inpsyde-plugin/blob/877139fb4da641e46df794455a4fd602a40291b5/src/TestInpsyde.php#L275, if not in DEBUG mode, general message would appear.
+
+> Full Composer support
+
+Yes, library loaded via composer (not included in plugin source code). I saw `mozart` package there but I've never used that so I will learn that later.
+
+> A README, in English, in Markdown-Formatting, explaining plugin usage and decisions behind implementation
+
+This file you are reading :)
+
+> Code to be compliant with Inpsyde code style
+
+PHPCS file here https://github.com/npbtrac/test-inpsyde-plugin/blob/master/phpcs.xml.dist#L15 (I copy it from Paypal Plus plugin)
+
+> Automated tests (more on this topic will follow below)
+
+I use Codeception framework and apply Unit Test only
+```shell script
+docker-compose exec php bash -c "cd /var/www/html/wp-content/plugins/test-inpsyde-plugin; php ./vendor/bin/codecept run --coverage"
+```
+
+- I make Unit Test to verify that a custom endpoint should be created.
+- And remote data should be pulled correctly (including exception handlers).
+
+>  A license, preferably in a LICENSE file in the repository root. We don't require any specific license, nor we will ever share your work without your permission. The license should at a very minimum allow us to access and store your work. If you want to use an OS license, feel free to do so.
+
+https://github.com/npbtrac/test-inpsyde-plugin/blob/master/LICENSE. **Everyone is permitted to copy and distribute verbatim copies
+ of this license document, but changing it is not allowed.**, so please feel free to access, store and share it :).
+ 
+> You can ship more if you desire. But we prefer if your extra effort, if any, will focus on the server-side, being the role back-end focused.
+
+I tried to use DI container for this plugin (not a usual way people do with WordPress but this approach is the one I want to work with). Not sure is this can be considered as **more feature** :)
+
+> Some ideas: make the endpoint customizable via options, make the plugin extensible/customizable via hooks, allow customization of the rendered page via template override in theme... etc. 
