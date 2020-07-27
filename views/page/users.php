@@ -19,6 +19,10 @@ $errorMessage = $viewParams['errorMessage'] ?? null;
 get_header();
 ?>
 
+<?php
+do_action('before_user_listing');
+?>
+
 <main id="site-content" class="custom-page" role="main">
     <header class="entry-header custom-page__header">
         <div class="entry-header-inner">
@@ -46,6 +50,10 @@ get_header();
                             'id' => $user['id'],
                         ], admin_url('admin-ajax.php'));
                         $errorMessage = __('There is some error happening. Please try again later!', $textDomain);
+
+                        // Apply filters for adjust data for user
+                        $user = apply_filters('adjust_single_user', $user);
+
                         ?>
                         <tr class="custom-page__grid__row">
                             <td class="custom-page__grid__order-number"><?php echo esc_html($tmpIndex + 1) ?></td>
@@ -76,6 +84,10 @@ get_header();
         </div>
     </div>
 </main>
+
+<?php
+do_action('after_user_listing');
+?>
 
 <?php
 get_footer();

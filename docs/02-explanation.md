@@ -98,4 +98,9 @@ https://github.com/npbtrac/test-inpsyde-plugin/blob/master/LICENSE. **Everyone i
 
 I tried to use DI container for this plugin (not a usual way people do with WordPress but this approach is the one I want to work with). Not sure is this can be considered as **more feature** :)
 
-> Some ideas: make the endpoint customizable via options, make the plugin extensible/customizable via hooks, allow customization of the rendered page via template override in theme... etc. 
+> Some ideas: make the endpoint customizable via options, make the plugin extensible/customizable via hooks, allow customization of the rendered page via template override in themes... etc. 
+
+- Settings page: http://test-inpsyde-plugin.docker/wp-admin/options-general.php?page=test-inpsyde-settings (it's quite ugly :S )
+- Rendering with theming support here https://github.com/npbtrac/test-inpsyde-plugin/blob/master/src/Services/ViewService.php
+    - A view file can be rendered with theme overriding one
+    - Or, by its absolute path.

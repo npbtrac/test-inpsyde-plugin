@@ -44,9 +44,9 @@ class ViewService
             return load_template($viewFilePath.$extension, false);
         }
 
-        $templateContent = locate_template($viewFilePath.$extension, true, false);
-        if (!empty($templateContent)) {
-            return $templateContent;
+        $locatedTemplateFile = locate_template($viewFilePath.$extension, false, false);
+        if (!empty($locatedTemplateFile)) {
+            return load_template($locatedTemplateFile, false);
         }
 
         if (file_exists($this->basePath.DIRECTORY_SEPARATOR.$viewFilePath.$extension)) {

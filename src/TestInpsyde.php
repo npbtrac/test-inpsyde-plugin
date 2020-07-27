@@ -5,7 +5,6 @@ namespace TestInpsyde\Wp\Plugin;
 
 use Exception;
 use WP;
-use GuzzleHttp\Exception\ClientException;
 use Illuminate\Container\Container;
 use TestInpsyde\Wp\Plugin\Interfaces\WPPluginInterface;
 use TestInpsyde\Wp\Plugin\Services\PageRendererService;
@@ -24,7 +23,7 @@ class TestInpsyde extends Container implements WPPluginInterface
     use ConfigTrait;
     use WPAttributeTrait;
 
-    const CUSTOM_ENDPOINT_NAME = 'custom-inpsyde';
+    const OPTIONS_GROUP_NAME = 'test_inpsyde_options_group';
 
     /**
      * @var string Version of this plugin
@@ -41,6 +40,11 @@ class TestInpsyde extends Container implements WPPluginInterface
      * @var string Base url of the folder of this plugin
      */
     public $baseUrl;
+
+    /**
+     * @var string Name of the custom endpoint
+     */
+    public $customEndpointName;
 
     /**
      * Tamara_Checkout constructor.
@@ -161,6 +165,10 @@ class TestInpsyde extends Container implements WPPluginInterface
 
         // We use `wp_loaded` hook for allowing widgets to be initialized, 77 for others to be loaded
         add_action('wp_loaded', [$this, 'renderCustomInpsydeResponse'], 77);
+
+        // Hooks for admin
+        add_action('admin_init', [$this, 'registerSettingsGroup']);
+        add_action('admin_menu', [$this, 'registerSettingsPage']);
     }
 
     /**
@@ -189,13 +197,13 @@ class TestInpsyde extends Container implements WPPluginInterface
      */
     public function addCustomRewriteRules()
     {
-        add_rewrite_rule('custom-inpsyde/?$', 'index.php?pagename='.static::CUSTOM_ENDPOINT_NAME, 'top');
+        add_rewrite_rule('custom-inpsyde/?$', 'index.php?pagename='.$this->customEndpointName, 'top');
     }
 
     /**
-     * Parse request URL to get `pagename` varaiable
+     * Parse request URL to get `pagename` variable
      *
-     * @return |null
+     * @return mixed|null
      */
     public function getRequestPagename()
     {
@@ -217,7 +225,7 @@ class TestInpsyde extends Container implements WPPluginInterface
     {
         $pagename = $this->getRequestPagename();
 
-        if (static::CUSTOM_ENDPOINT_NAME === $pagename) {
+        if ($this->customEndpointName === $pagename) {
             /** @var UserRemoteJsonService $userRemoteJsonService */
             $userRemoteJsonService = $this->getService(UserRemoteJsonService::class);
 
@@ -252,7 +260,7 @@ class TestInpsyde extends Container implements WPPluginInterface
 
         $this->renderSingleUserResponse($userId, $userRemoteJsonService, $viewService, $pageRendererService);
 
-        // Besure to have ajax call ending here
+        // Be sure to have ajax call ending here
         wp_die();
     }
 
@@ -263,7 +271,7 @@ class TestInpsyde extends Container implements WPPluginInterface
      * @param PageRendererService $pageRendererService
      *
      * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \Exception
+     * @throws Exception
      */
     public function renderListUsersResponse(
         UserRemoteJsonService $userRemoteJsonService,
@@ -294,7 +302,6 @@ class TestInpsyde extends Container implements WPPluginInterface
      * @param PageRendererService $pageRendererService
      *
      * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function renderSingleUserResponse(
         $userId,
@@ -303,6 +310,7 @@ class TestInpsyde extends Container implements WPPluginInterface
         PageRendererService $pageRendererService
     ) {
 
+        $errorMessage = null;
         try {
             $user = $userRemoteJsonService->getSingle($userId);
         } catch (Exception $exception) {
@@ -315,5 +323,49 @@ class TestInpsyde extends Container implements WPPluginInterface
             'textDomain' => $this->textDomain,
             'errorMessage' => $errorMessage,
         ]);
+    }
+
+    /**
+     * Register a settings group for this plugin
+     */
+    public function registerSettingsGroup()
+    {
+        add_option('custom_endpoint_name', 'custom-inpsyde');
+        register_setting(static::OPTIONS_GROUP_NAME, 'custom_endpoint_name', 'sanitize_title');
+    }
+
+    /**
+     * Register the Admin page for plugin settings
+     */
+    public function registerSettingsPage()
+    {
+        add_options_page(
+            __('Test Inpsyde Settings', $this->textDomain),
+            __('Test Inpsyde Settings', $this->textDomain),
+            'manage_options',
+            'test-inpsyde-settings',
+            [$this, 'displaySettingsPage']
+        );
+    }
+
+    /** @noinspection PhpFullyQualifiedNameUsageInspection */
+    /**
+     * Showing content for options page
+     *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public function displaySettingsPage()
+    {
+        /** @var ViewService $viewService */
+        $viewService = $this->getService(ViewService::class);
+
+        // We ignore WordPress.XSS.EscapeOutput.OutputNotEscaped because we're gonna do this on the view side
+        // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+        echo $viewService->render(
+            'views/admin/test-inpsyde-settings',
+            // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+            ['textDomain' => $this->textDomain]
+        );
+        exit;
     }
 }
