@@ -77,7 +77,7 @@ This file you are reading :)
 
 > Code to be compliant with Inpsyde code style
 
-PHPCS file here https://github.com/npbtrac/test-inpsyde-plugin/blob/master/phpcs.xml.dist#L15 (I copy it from Paypal Plus plugin)
+PHPCS file here https://github.com/npbtrac/test-inpsyde-plugin/blob/master/phpcs.xml.dist#L15 (I copy it from Paypal Plus plugin). It excludes several Inpsyde rules therefore, my code is not 100% Inpsyde qualified but it's still Inpsyde one :) (it's from Inpsyde's plugin).
 
 > Automated tests (more on this topic will follow below)
 
@@ -104,3 +104,65 @@ I tried to use DI container for this plugin (not a usual way people do with Word
 - Rendering with theming support here https://github.com/npbtrac/test-inpsyde-plugin/blob/master/src/Services/ViewService.php
     - A view file can be rendered with theme overriding one
     - Or, by its absolute path.
+- Actions for prepend HTML https://github.com/npbtrac/test-inpsyde-plugin/blob/master/views/page/users.php#L23 
+- Filters for adjusting values of a single user https://github.com/npbtrac/test-inpsyde-plugin/blob/master/views/page/users.php#L55
+
+> - About automated tests
+>    
+>    Unit tests have to be provided. When we say “unit tests” we mean tests that run without loading WordPress nor the external API.
+>    Inpsyde employee Giuseppe wrote an answer on WordPress Stack Exchange about this topic. We also suggest having a look at Brain Monkey, a tool to write unit tests for WordPress.
+>
+>    Note that using this tool is a suggestion and it is not required at all.
+>    
+>    We do not expect 100% code coverage. We want you to write tests as a means to verify either your experience with the topic or the way you handle demand on a topic you have no experience with.
+>    
+>    Other kinds of tests, for example, tests that load WordPress and/or the external API are not required. You can write those if you wish, but make sure they pass if you do.
+
+- I use Codeception because I'm familiar with it more. I do not create Functionnal Tests (needs to load WordPress) but I have been working on the Test for ~ 4 weeks so I would like to complete required things.
+
+- Simply run 
+```shell script
+docker-compose exec php bash -c "cd /var/www/html/wp-content/plugins/test-inpsyde-plugin; php ./vendor/bin/codecept run --coverage"
+```
+
+- I created tests for our main scenarios:
+    + A custom endpoint should be there (with Functional Tests, it would be better).
+    + Tests remote json service (data found and exceptions found).
+    
+> - About Composer dependencies
+>    
+>    Composer support is mandatory, and pulling packages via Composer is an allowed practice. And between tests and code style checks development dependencies will likely be there.
+>    
+>    It is also allowed to use dependencies for production code. That said, we appreciate it when dependencies are kept to the very essential. Please use the README to briefly explain why a Composer package has been added.
+>    
+>    At Inpsyde, we use Composer to manage the whole website code. We use it to install WordPress itself, alongside all plugins and themes, and we load Composer autoload in wp-config.php. We will appreciate it if the delivered plugin will be compliant with this workflow.
+
+- I don't include vendor to repo so to have them, we need to install them using composer. I use composer docker container to avoid instally composer to local machine
+```shell script
+docker-compose run --rm composer composer install
+```
+
+- More details on packages can be found [here](02-01-compose-explanations.md) 
+
+> - About installation steps
+>  
+>  We expect that cloning your repository and running composer update, is all we need to get your plugin ready to be added to WordPress.
+>  In that’s not the case, or if extra steps are necessary (e.g. to compile frontend assets), you need to document installation steps in the README.
+  
+>  Note: to ship “compiled” frontend assets in version control is an allowed practice for this assignment.
+  A “distribution plugin package” ready to be installed in WordPress (including Composer vendor files, autoload, compiled assets...) is not required. If you decide to ship it, make it available in the “Releases” section of the GitHub repository.
+
+- Previously, I use this repo https://github.com/npbtrac/test-inpsyde-wp to have WP and include the plugin to it.
+- Later, I found the Paypal Plus approach and I see that a better approach so I use the latter to make things more simpler.
+- I put everything needed to make the website run here
+```shell script
+docker-compose run --rm composer composer install
+docker-compose up -d --build
+docker-compose exec php /opt/wp-install.sh
+docker-compose run --rm node npm install --save-dev
+docker-compose run --rm node npm run dev
+```
+
+> - Is everything ready?
+
+- Yes, I test this hundred times. Hopefully things will go smoothly your end.

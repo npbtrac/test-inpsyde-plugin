@@ -15,7 +15,7 @@ cp .env.example .env
 
 - Run below command to set up docker and WordPress
 ```shell script
-docker-compose run --rm composer composer install --dev
+docker-compose run --rm composer composer install
 docker-compose up -d --build
 docker-compose exec php /opt/wp-install.sh
 docker-compose run --rm node npm install --save-dev
