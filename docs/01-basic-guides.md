@@ -17,9 +17,9 @@ cp .env.example .env
 ```shell script
 docker-compose run --rm composer composer install
 docker-compose up -d --build
-docker-compose exec php /opt/wp-install.sh
 docker-compose run --rm node npm install --save-dev
 docker-compose run --rm node npm run dev
+docker-compose exec php /opt/wp-install.sh (this may fail because for some reason, `mariadb is not available`, so please rerun if you see 'Error: `Connection refused`')
 ```
 
 - Make domain `test-inpsyde-plugin.docker` point to your docker desktop or docker machine
