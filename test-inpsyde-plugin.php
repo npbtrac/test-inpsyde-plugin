@@ -7,7 +7,7 @@
  * @package test-ipsyde-plugin
  *
  * Plugin Name: Test for Inpsyde
- * Description: Plugin for checking out using Tamara payment method
+ * Description: A test plugin for getting remote json users
  * Author:      nptrac@yahoo.com
  * Text Domain: inpsyde
  */
